@@ -1,0 +1,12 @@
+name = "dropshift-quote"
+main = "src/index.js"
+compatibility_date = "2024-10-01"
+
+# Route on Cloudflare dashboard (or via routes below after first deploy):
+# dropshift.co.uk/api/quote* → this worker
+
+[vars]
+FROM_NAME = "DropShift Transport"
+FROM_EMAIL = "contact@dropshift.co.uk"
+TO_EMAIL = "contact@dropshift.co.uk"
+ALLOWED_ORIGIN = "https://dropshift.co.uk"
