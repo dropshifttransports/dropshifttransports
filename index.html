@@ -870,7 +870,7 @@ footer a:hover{color:#fff}
       <div class="form-success" id="formSuccess" role="status" hidden>Thanks — your quote request is with us. We'll get back to you shortly.</div>
       <div class="form-foot">
         <button class="btn btn-primary" type="submit" id="quoteSubmit"><svg aria-hidden="true"><use href="#i-arrow"/></svg>Send quote request</button>
-        <span class="form-note">Sent securely by email. WhatsApp backup if email is unavailable.</span>
+        <span class="form-note">Sent by email to our team. WhatsApp opens if email is unavailable.</span>
       </div>
     </form>
   </div>
@@ -1060,18 +1060,19 @@ if(!reduce && window.matchMedia('(pointer:fine)').matches){
 }
 
 
-/* ---------- Quote form → Brevo (via /api/quote) + WhatsApp fallback ---------- */
+/* ---------- Quote form → email (FormSubmit) + WhatsApp fallback ---------- */
 var form=document.getElementById('quoteForm'), err=document.getElementById('formError'), okEl=document.getElementById('formSuccess'), submitBtn=document.getElementById('quoteSubmit');
-var QUOTE_API='/api/quote';
-function waFallback(payload){
-  var lines=['Quote request: DropShift Transport','Name: '+payload.name,'Phone: '+payload.phone];
-  if(payload.company)lines.push('Company: '+payload.company);
-  lines.push('Service: '+payload.service,'Collection: '+payload.from,'Delivery: '+payload.to);
-  if(payload.date)lines.push('Date: '+payload.date);
-  lines.push('Frequency: '+payload.freq);
-  if(payload.details)lines.push('Details: '+payload.details);
-  window.open('https://wa.me/447353086191?text='+encodeURIComponent(lines.join('\n')),'_blank','noopener');
+var QUOTE_EMAIL='https://formsubmit.co/ajax/contact@dropshift.co.uk';
+function quoteLines(p){
+  var lines=['Quote request: DropShift Transport','Name: '+p.name,'Phone: '+p.phone];
+  if(p.company)lines.push('Company: '+p.company);
+  lines.push('Service: '+p.service,'Collection: '+p.from,'Delivery: '+p.to);
+  if(p.date)lines.push('Date: '+p.date);
+  lines.push('Frequency: '+p.freq);
+  if(p.details)lines.push('Details: '+p.details);
+  return lines;
 }
+function waFallback(p){window.open('https://wa.me/447353086191?text='+encodeURIComponent(quoteLines(p).join('\n')),'_blank','noopener');}
 form.addEventListener('submit',function(e){
   e.preventDefault();
   var req=['name','phone','from','to'], missing=[], first=null;
@@ -1080,18 +1081,35 @@ form.addEventListener('submit',function(e){
   err.classList.remove('show');err.textContent='';
   if(okEl)okEl.hidden=true;
   var v=function(id){return document.getElementById(id).value.trim();};
-  var payload={name:v('name'),phone:v('phone'),company:v('company'),service:v('service'),from:v('from'),to:v('to'),date:v('date'),freq:v('freq'),details:v('details'),website:v('website')};
+  if(v('website')){if(okEl)okEl.hidden=false;form.reset();return;}
+  var payload={name:v('name'),phone:v('phone'),company:v('company'),service:v('service'),from:v('from'),to:v('to'),date:v('date'),freq:v('freq'),details:v('details')};
+  var mailBody={
+    _subject:'New quote — '+payload.name+(payload.company?' / '+payload.company:'')+' · '+payload.from+' → '+payload.to,
+    _template:'table',
+    _captcha:'false',
+    _honey:'',
+    Name:payload.name,
+    Phone:payload.phone,
+    Company:payload.company||'—',
+    Service:payload.service,
+    Collection:payload.from,
+    Delivery:payload.to,
+    'Preferred date':payload.date||'—',
+    Frequency:payload.freq||'—',
+    Details:payload.details||'—',
+    Message:quoteLines(payload).join('\n')
+  };
   var prev=submitBtn?submitBtn.innerHTML:'';
   if(submitBtn){submitBtn.disabled=true;submitBtn.textContent='Sending…';}
-  fetch(QUOTE_API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)})
+  fetch(QUOTE_EMAIL,{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify(mailBody)})
     .then(function(r){return r.json().then(function(j){return {ok:r.ok,j:j};}).catch(function(){return {ok:r.ok,j:{}};});})
     .then(function(res){
-      if(res.ok && res.j && res.j.ok){
+      if(res.ok){
         if(okEl)okEl.hidden=false;
         form.reset();
         return;
       }
-      throw new Error((res.j&&res.j.error)||'send failed');
+      throw new Error((res.j&&(res.j.message||res.j.error))||'send failed');
     })
     .catch(function(){
       err.textContent='Email unavailable right now — opening WhatsApp so we still get your request.';
@@ -1100,7 +1118,7 @@ form.addEventListener('submit',function(e){
     })
     .finally(function(){if(submitBtn){submitBtn.disabled=false;submitBtn.innerHTML=prev;}});
 });
-  })();
+})();
 </script>
 </body>
 </html>
