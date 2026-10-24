@@ -293,6 +293,24 @@
 
     var knowledge = [
       {
+        id: "manvan",
+        q: "Do you offer man and van?",
+        keys: ["man and van", "man with a van", "man & van", "hire", "near me", "hourly", "book a man"],
+        a: "Yes — man and van London from East London, including same-day by arrangement and two-man teams. Book online for an instant quote, or see dropshift.co.uk/man-and-van/",
+      },
+      {
+        id: "removals",
+        q: "Do you do house removals?",
+        keys: ["house removal", "removal company", "moving company", "small removal", "flat move", "house move"],
+        a: "Yes. House removals, flat moves and small removals across London and the UK. Get a house removal quote on the form — details at /house-removals/",
+      },
+      {
+        id: "furniture",
+        q: "Furniture or sofa delivery?",
+        keys: ["furniture", "sofa", "wardrobe", "large item", "white glove", "two man", "courier"],
+        a: "We offer furniture collection and delivery, sofa delivery, two-man and white-glove options, plus same-day courier by arrangement. Ask on the quote form.",
+      },
+      {
         id: "base",
         q: "Where are you based?",
         keys: ["based", "base", "location", "where", "east london", "address", "office", "depot"],
@@ -360,7 +378,7 @@
       },
     ];
 
-    var chipIds = ["cover", "price", "tail", "business", "contact"];
+    var chipIds = ["manvan", "removals", "furniture", "price", "contact"];
 
     function esc(s) {
       return String(s || "")
