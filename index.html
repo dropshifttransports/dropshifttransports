@@ -9,7 +9,7 @@
 <meta name="author" content="DropShift Transport">
 <meta name="geo.region" content="GB-LND">
 <meta name="geo.placename" content="East London">
-<meta name="theme-color" content="#0B0B0C">
+<meta name="theme-color" content="#0A2463">
 <link rel="canonical" href="https://dropshift.co.uk/">
 <link rel="alternate" hreflang="en-GB" href="https://dropshift.co.uk/">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
@@ -169,14 +169,14 @@ gtag('config', 'G-29N0M3VMT6');
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&family=Inter+Tight:wght@500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,600;0,700;0,800;1,700;1,800&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/site.css">
 </head>
 <body>
 
 <div class="preloader" id="preloader" aria-hidden="false">
   <div class="preloader-inner">
-    <div class="preloader-brand">DropShift Transport</div>
+    <div class="preloader-brand"><img src="assets/logo.webp" alt="DropShift Transport" width="183" height="44"></div>
     <div class="preloader-count" id="preCount">0</div>
     <div class="preloader-bar" aria-hidden="true"><i></i></div>
   </div>
@@ -186,7 +186,7 @@ gtag('config', 'G-29N0M3VMT6');
 
 <header class="site-header">
   <div class="header-inner">
-    <a class="brand" href="#top" aria-label="DropShift Transport home">DropShift<small>Transport</small></a>
+    <a class="brand" href="#top" aria-label="DropShift Transport home"><img src="assets/logo.webp" alt="DropShift Transport" width="183" height="44"></a>
     <nav class="nav" id="nav" aria-label="Main">
       <a href="#services"><span class="roll"><span><i>Services</i><i>Services</i></span></span></a>
       <a href="#coverage"><span class="roll"><span><i>Coverage</i><i>Coverage</i></span></span></a>
@@ -363,24 +363,32 @@ gtag('config', 'G-29N0M3VMT6');
   <div class="wrap how-head">
     <p class="eyebrow reveal">Process</p>
     <h2 class="reveal" data-split>How it works</h2>
-    <p class="lede reveal" style="margin-top:18px">Four steps from your first message to the final delivery.</p>
+    <p class="lede reveal" style="margin-top:12px">Four steps from your first message to the final delivery.</p>
   </div>
   <div class="how-pin">
-    <div class="wrap">
+    <div class="how-toolbar">
+      <button type="button" class="how-nav-btn" id="howPrev" aria-label="Previous step">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg>
+      </button>
+      <button type="button" class="how-nav-btn" id="howNext" aria-label="Next step">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18l6-6-6-6"/></svg>
+      </button>
+    </div>
+    <div class="how-scroller" id="howScroller" data-cursor="Drag" data-lenis-prevent>
       <div class="how-track">
         <article class="how-card">
           <div class="how-media">
-            <img src="assets/hallway-move.jpg" alt="" loading="lazy" width="1086" height="1448">
+            <img src="assets/hallway-move.jpg" alt="" loading="lazy" width="1086" height="1448" draggable="false">
             <span class="pin">01</span>
           </div>
           <div class="how-body">
             <h3>Tell us what's moving</h3>
-            <p>Share the collection and delivery addresses, the items and your preferred date. A call or WhatsApp is fine.</p>
+            <p>Share the collection and delivery locations, the items and your preferred date. A call or WhatsApp is fine.</p>
           </div>
         </article>
         <article class="how-card">
           <div class="how-media">
-            <img src="assets/pack-kitchen.jpg" alt="" loading="lazy" width="1086" height="1448">
+            <img src="assets/pack-kitchen.jpg" alt="" loading="lazy" width="1086" height="1448" draggable="false">
             <span class="pin">02</span>
           </div>
           <div class="how-body">
@@ -390,7 +398,7 @@ gtag('config', 'G-29N0M3VMT6');
         </article>
         <article class="how-card">
           <div class="how-media">
-            <img src="assets/commercial-loading.jpg" alt="" loading="lazy" width="576" height="1024">
+            <img src="assets/commercial-loading.jpg" alt="" loading="lazy" width="576" height="1024" draggable="false">
             <span class="pin">03</span>
           </div>
           <div class="how-body">
@@ -400,7 +408,7 @@ gtag('config', 'G-29N0M3VMT6');
         </article>
         <article class="how-card">
           <div class="how-media">
-            <img src="assets/hero-job.jpg" alt="" loading="lazy" width="1024" height="682">
+            <img src="assets/hero-job.jpg" alt="" loading="lazy" width="1024" height="682" draggable="false">
             <span class="pin">04</span>
           </div>
           <div class="how-body">
@@ -409,6 +417,8 @@ gtag('config', 'G-29N0M3VMT6');
           </div>
         </article>
       </div>
+    </div>
+    <div class="wrap">
       <div class="how-progress" aria-hidden="true"><i></i></div>
     </div>
   </div>
@@ -437,7 +447,7 @@ gtag('config', 'G-29N0M3VMT6');
     <h2 class="reveal" data-split>Built for commercial loads.</h2>
     <p class="lede reveal" style="margin-top:18px">Tail-lift Luton vans and pallet-truck equipment for warehouse logistics, stock transfers and B2B deliveries — with careful handling for office and residential work too.</p>
     <div class="work-layout">
-      <div class="gallery" id="workGallery" data-cursor="Drag" aria-label="Photos from real DropShift Transport jobs">
+      <div class="gallery" id="workGallery" data-cursor="Drag" data-lenis-prevent aria-label="Photos from real DropShift Transport jobs">
         <figure><img src="assets/pallet-bay-load.jpg" alt="DropShift Luton van loading black-wrapped pallets on a commercial bay" width="576" height="1024" loading="lazy"></figure>
         <figure><img src="assets/van-interior-pallets.jpg" alt="Interior of DropShift Luton van loaded with palletised commercial goods" width="768" height="1024" loading="lazy"></figure>
       </div>
@@ -601,7 +611,7 @@ gtag('config', 'G-29N0M3VMT6');
     <div class="foot-word">DropShift</div>
     <div class="foot-grid">
       <div>
-        <div class="brand">DropShift<small>Transport</small></div>
+        <a class="brand" href="#top"><img src="assets/logo.webp" alt="DropShift Transport" width="183" height="44"></a>
         <p class="foot-brand-blurb">Professional Luton van transport, commercial logistics, B2B deliveries, office relocations and removals.</p>
         <p class="foot-brand-blurb" style="margin-top:8px">East London · Nationwide UK.</p>
       </div>

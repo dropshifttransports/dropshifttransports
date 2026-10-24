@@ -184,20 +184,101 @@
   /* ---------- Gallery drag ---------- */
   var gallery = document.getElementById("workGallery");
   if (gallery) {
-    var down = false, startX = 0, scrollL = 0;
+    var gDown = false, gStartX = 0, gScrollL = 0;
     gallery.addEventListener("pointerdown", function (e) {
-      down = true;
-      startX = e.pageX;
-      scrollL = gallery.scrollLeft;
+      gDown = true;
+      gStartX = e.pageX;
+      gScrollL = gallery.scrollLeft;
       gallery.setPointerCapture(e.pointerId);
     });
     gallery.addEventListener("pointermove", function (e) {
-      if (!down) return;
-      gallery.scrollLeft = scrollL - (e.pageX - startX);
+      if (!gDown) return;
+      gallery.scrollLeft = gScrollL - (e.pageX - gStartX);
     });
-    gallery.addEventListener("pointerup", function () { down = false; });
-    gallery.addEventListener("pointerleave", function () { down = false; });
+    gallery.addEventListener("pointerup", function () { gDown = false; });
+    gallery.addEventListener("pointerleave", function () { gDown = false; });
   }
+
+  /* ---------- How carousel (drag + arrows) — outside GSAP so it always works ---------- */
+  (function initHowCarousel() {
+    var scroller = document.getElementById("howScroller");
+    if (!scroller) return;
+    var progress = document.querySelector(".how-progress > i");
+    var prevBtn = document.getElementById("howPrev");
+    var nextBtn = document.getElementById("howNext");
+    var cards = scroller.querySelectorAll(".how-card");
+
+    function maxScroll() {
+      return Math.max(0, scroller.scrollWidth - scroller.clientWidth);
+    }
+    function updateProgress() {
+      var max = maxScroll();
+      if (progress) progress.style.width = max > 0 ? (scroller.scrollLeft / max) * 100 + "%" : "0%";
+      if (prevBtn) prevBtn.disabled = scroller.scrollLeft <= 4;
+      if (nextBtn) nextBtn.disabled = scroller.scrollLeft >= max - 4;
+    }
+    function cardStep() {
+      var card = cards[0];
+      if (!card) return Math.round(scroller.clientWidth * 0.8);
+      var styles = window.getComputedStyle(scroller.querySelector(".how-track"));
+      var gap = parseFloat(styles.columnGap || styles.gap) || 16;
+      return card.getBoundingClientRect().width + gap;
+    }
+    function scrollByDir(dir) {
+      scroller.scrollBy({ left: dir * cardStep(), behavior: "smooth" });
+    }
+
+    var down = false;
+    var startX = 0;
+    var scrollL = 0;
+    var moved = false;
+    scroller.addEventListener("pointerdown", function (e) {
+      if (e.pointerType === "mouse" && e.button !== 0) return;
+      down = true;
+      moved = false;
+      startX = e.pageX;
+      scrollL = scroller.scrollLeft;
+      try {
+        scroller.setPointerCapture(e.pointerId);
+      } catch (err) {}
+    });
+    scroller.addEventListener("pointermove", function (e) {
+      if (!down) return;
+      var dx = e.pageX - startX;
+      if (Math.abs(dx) > 3) moved = true;
+      scroller.scrollLeft = scrollL - dx;
+      updateProgress();
+    });
+    function endDrag(e) {
+      down = false;
+      try {
+        if (e && e.pointerId != null) scroller.releasePointerCapture(e.pointerId);
+      } catch (err) {}
+    }
+    scroller.addEventListener("pointerup", endDrag);
+    scroller.addEventListener("pointercancel", endDrag);
+    scroller.addEventListener("scroll", updateProgress, { passive: true });
+    scroller.addEventListener(
+      "wheel",
+      function (e) {
+        if (Math.abs(e.deltaX) > Math.abs(e.deltaY) || e.shiftKey) {
+          e.preventDefault();
+          scroller.scrollLeft += e.deltaX || e.deltaY;
+          updateProgress();
+        } else if (Math.abs(e.deltaY) > 0 && maxScroll() > 0) {
+          /* Convert vertical wheel to horizontal when hovering carousel */
+          e.preventDefault();
+          scroller.scrollLeft += e.deltaY;
+          updateProgress();
+        }
+      },
+      { passive: false }
+    );
+    if (prevBtn) prevBtn.addEventListener("click", function () { scrollByDir(-1); });
+    if (nextBtn) nextBtn.addEventListener("click", function () { scrollByDir(1); });
+    window.addEventListener("resize", updateProgress);
+    updateProgress();
+  })();
 
   /* ---------- Toast ---------- */
   var toastHost = document.getElementById("toastHost");
@@ -274,34 +355,34 @@
     function row(label, value) {
       if (!value) return "";
       return (
-        '<tr><td style="padding:10px 0;border-bottom:1px solid #E8E5DE;width:38%;font-size:13px;color:#5C5A55">' +
+        '<tr><td style="padding:10px 0;border-bottom:1px solid #CFDDF4;width:38%;font-size:13px;color:#4D5B78">' +
         escHtml(label) +
-        '</td><td style="padding:10px 0;border-bottom:1px solid #E8E5DE;font-size:15px;color:#121214;font-weight:700">' +
+        '</td><td style="padding:10px 0;border-bottom:1px solid #CFDDF4;font-size:15px;color:#0A2463;font-weight:700">' +
         escHtml(value) +
         "</td></tr>"
       );
     }
     var details = f.details
-      ? '<tr><td style="padding:0 28px 24px"><div style="background:#F2F0EB;border:1px solid #D9D4C8;padding:16px 18px"><div style="font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#5C5A55;font-weight:700;margin-bottom:8px">Job details</div><div style="font-size:15px;line-height:1.55;color:#121214">' +
+      ? '<tr><td style="padding:0 28px 24px"><div style="background:#EAF1FC;border:1px solid #CFDDF4;padding:16px 18px"><div style="font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#4D5B78;font-weight:700;margin-bottom:8px">Job details</div><div style="font-size:15px;line-height:1.55;color:#13203B">' +
         escHtml(f.details).replace(/\n/g, "<br>") +
         "</div></div></td></tr>"
       : "";
     var html =
-      '<!DOCTYPE html><html><body style="margin:0;background:#E8E5DE;font-family:Arial,Helvetica,sans-serif">' +
+      '<!DOCTYPE html><html><body style="margin:0;background:#EAF1FC;font-family:Arial,Helvetica,sans-serif">' +
       '<table width="100%" cellpadding="0" cellspacing="0" style="padding:28px 12px"><tr><td align="center">' +
-      '<table width="100%" style="max-width:600px;background:#fff;border:1px solid #D9D4C8">' +
-      '<tr><td style="background:#0B0B0C;padding:22px 28px;border-bottom:3px solid #C2A06B">' +
-      '<div style="font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:#C2A06B;font-weight:700">DropShift Transport</div>' +
-      '<div style="font-size:24px;font-weight:700;color:#F2F0EB;margin-top:8px">New quote request</div></td></tr>' +
-      '<tr><td style="padding:20px 28px 8px;color:#5C5A55;font-size:14px">Submitted ' +
+      '<table width="100%" style="max-width:600px;background:#fff;border:1px solid #CFDDF4">' +
+      '<tr><td style="background:#0A2463;padding:22px 28px;border-bottom:4px solid #1659D6">' +
+      '<div style="font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:#7FA8FF;font-weight:700">DropShift Transport</div>' +
+      '<div style="font-size:24px;font-weight:700;color:#fff;margin-top:8px">New quote request</div></td></tr>' +
+      '<tr><td style="padding:20px 28px 8px;color:#4D5B78;font-size:14px">Submitted ' +
       escHtml(when) +
       " (London)</td></tr>" +
-      '<tr><td style="padding:8px 28px"><table width="100%" style="background:#121214"><tr>' +
-      '<td style="padding:16px;width:44%"><div style="color:#C2A06B;font-size:10px;letter-spacing:.12em;text-transform:uppercase;margin-bottom:6px">Collection</div><div style="color:#F2F0EB;font-weight:700">' +
+      '<tr><td style="padding:8px 28px"><table width="100%" style="background:#0A2463"><tr>' +
+      '<td style="padding:16px;width:44%"><div style="color:#7FA8FF;font-size:10px;letter-spacing:.12em;text-transform:uppercase;margin-bottom:6px">Collection</div><div style="color:#fff;font-weight:700">' +
       escHtml(f.from) +
       "</div></td>" +
-      '<td align="center" style="color:#C2A06B;width:12%">→</td>' +
-      '<td style="padding:16px;width:44%"><div style="color:#C2A06B;font-size:10px;letter-spacing:.12em;text-transform:uppercase;margin-bottom:6px">Delivery</div><div style="color:#F2F0EB;font-weight:700">' +
+      '<td align="center" style="color:#7FA8FF;width:12%">→</td>' +
+      '<td style="padding:16px;width:44%"><div style="color:#7FA8FF;font-size:10px;letter-spacing:.12em;text-transform:uppercase;margin-bottom:6px">Delivery</div><div style="color:#fff;font-weight:700">' +
       escHtml(f.to) +
       "</div></td></tr></table></td></tr>" +
       '<tr><td style="padding:12px 28px"><table width="100%">' +
@@ -316,12 +397,12 @@
       '<tr><td style="padding:8px 28px 28px" align="center">' +
       '<a href="' +
       escHtml(phoneHref) +
-      '" style="display:inline-block;background:#C2A06B;color:#0B0B0C;text-decoration:none;font-weight:700;padding:14px 22px;margin:4px">Call customer</a>' +
+      '" style="display:inline-block;background:#1659D6;color:#fff;text-decoration:none;font-weight:700;padding:14px 22px;margin:4px">Call customer</a>' +
       '<a href="' +
       escHtml(wa) +
       '" style="display:inline-block;background:#25D366;color:#fff;text-decoration:none;font-weight:700;padding:14px 22px;margin:4px">WhatsApp</a></td></tr>' +
-      '<tr><td style="background:#0B0B0C;padding:18px 28px;border-top:3px solid #C2A06B;color:rgba(242,240,235,.62);font-size:12px">' +
-      '<div style="color:#F2F0EB;font-weight:700">DropShift Transport</div>East London · Nationwide UK · contact@dropshift.co.uk · +44 7353 086191</td></tr>' +
+      '<tr><td style="background:#0A2463;padding:18px 28px;border-top:4px solid #1659D6;color:#B3C4E6;font-size:12px">' +
+      '<div style="color:#fff;font-weight:700">DropShift Transport</div>East London · Nationwide UK · contact@dropshift.co.uk · +44 7353 086191</td></tr>' +
       "</table></td></tr></table></body></html>";
     var text = [
       "DROPSHIFT TRANSPORT — New quote",
@@ -589,18 +670,18 @@
     });
     var hubG = el("g", {});
     hubG.appendChild(el("circle", { cx: H[0], cy: H[1], r: 10, class: "hub-ring" }));
-    hubG.appendChild(el("circle", { cx: H[0], cy: H[1], r: 5, fill: "#C2A06B" }));
+    hubG.appendChild(el("circle", { cx: H[0], cy: H[1], r: 5, fill: "#7FA8FF" }));
     var ht = el("text", {
       x: H[0] - 10,
       y: H[1] + 22,
       "text-anchor": "end",
       fill: "#F2F0EB",
-      style: "font:600 12px DM Sans,sans-serif",
+      style: "font:600 12px Barlow,sans-serif",
     });
     ht.textContent = "East London";
     hubG.appendChild(ht);
     map.appendChild(hubG);
-    mover = el("circle", { r: 4, fill: "#C2A06B", opacity: 0 });
+    mover = el("circle", { r: 4, fill: "#7FA8FF", opacity: 0 });
     map.appendChild(mover);
     arcs.forEach(function (p) {
       var L = p.getTotalLength();
@@ -795,36 +876,6 @@
         },
       });
     });
-
-    /* How horizontal pin */
-    var track = document.querySelector(".how-track");
-    var pin = document.querySelector(".how-pin");
-    var progress = document.querySelector(".how-progress > i");
-    if (track && pin && !reduce && window.innerWidth > 900) {
-      var getScroll = function () {
-        return Math.max(0, track.scrollWidth - window.innerWidth + 80);
-      };
-      gsap.to(track, {
-        x: function () {
-          return -getScroll();
-        },
-        ease: "none",
-        scrollTrigger: {
-          trigger: pin,
-          start: "top top+=76",
-          end: function () {
-            return "+=" + getScroll();
-          },
-          pin: true,
-          scrub: 1,
-          anticipatePin: 1,
-          onUpdate: function (self) {
-            if (progress) progress.style.width = self.progress * 100 + "%";
-          },
-          invalidateOnRefresh: true,
-        },
-      });
-    }
 
     /* Magnetic buttons */
     if (!reduce && fine) {
