@@ -280,6 +280,212 @@
     updateProgress();
   })();
 
+  /* ---------- FAQ chatbot ---------- */
+  (function initFaqChat() {
+    var launch = document.getElementById("chatLaunch");
+    var panel = document.getElementById("chatPanel");
+    var closeBtn = document.getElementById("chatClose");
+    var log = document.getElementById("chatLog");
+    var chips = document.getElementById("chatChips");
+    var form = document.getElementById("chatForm");
+    var input = document.getElementById("chatInput");
+    if (!launch || !panel || !log || !form || !input) return;
+
+    var knowledge = [
+      {
+        id: "base",
+        q: "Where are you based?",
+        keys: ["based", "base", "location", "where", "east london", "address", "office", "depot"],
+        a: "We're based in East London and work nationwide across the UK — Greater London plus England, Scotland and Wales.",
+      },
+      {
+        id: "cover",
+        q: "Where do you deliver?",
+        keys: ["deliver", "delivery", "coverage", "cover", "nationwide", "uk", "scotland", "wales", "manchester", "birmingham", "glasgow", "cities", "area"],
+        a: "We cover all of Greater London and deliver nationwide, including Birmingham, Manchester, Leeds, Bristol, Cardiff, Newcastle, Edinburgh and Glasgow. Need somewhere else? Ask us on the quote form.",
+      },
+      {
+        id: "price",
+        q: "How do I get a price?",
+        keys: ["price", "quote", "cost", "how much", "pricing", "estimate", "rate", "charges"],
+        a: "Use the free quote form on this page, or call / WhatsApp +44 7353 086191. Share collection, delivery and what's moving — we'll send a clear tailored quotation.",
+      },
+      {
+        id: "business",
+        q: "Do you do regular business jobs?",
+        keys: ["business", "contract", "weekly", "regular", "b2b", "warehouse", "retail", "ecommerce", "scheduled", "recurring"],
+        a: "Yes. We support warehouses, retailers, e-commerce and offices with one-off jobs, weekly deliveries, scheduled stock transfers and ongoing B2B logistics.",
+      },
+      {
+        id: "it",
+        q: "Can you move IT / office equipment?",
+        keys: ["it", "office", "computer", "monitor", "server", "desk", "relocation", "corporate", "printer"],
+        a: "Yes. We handle office and IT relocations — computers, monitors, printers, networking gear, desks, workstations and filing cabinets.",
+      },
+      {
+        id: "small",
+        q: "Do you take small / single-item jobs?",
+        keys: ["single", "small", "one item", "furniture", "removal", "house", "flat", "student"],
+        a: "Yes. From a single piece of furniture to a full house or flat move — single items and multi-item jobs are welcome.",
+      },
+      {
+        id: "tail",
+        q: "Do vans have a tail lift?",
+        keys: ["tail", "tail-lift", "taillift", "pallet", "luton", "van", "equipment", "forklift"],
+        a: "Yes. Our Luton vans have a tail lift and pallet truck for palletised stock and commercial loads.",
+      },
+      {
+        id: "insured",
+        q: "Are you insured?",
+        keys: ["insur", "liability", "goods in transit", "goods-in-transit", "public liability"],
+        a: "Yes. We carry goods-in-transit and public liability cover. Cover amounts are available on request.",
+      },
+      {
+        id: "services",
+        q: "What services do you offer?",
+        keys: ["service", "offer", "do you do", "commercial", "logistics", "specialist", "help with"],
+        a: "Commercial & warehouse logistics, office/IT relocations, furniture & residential removals, specialist commercial deliveries, and regular business transport contracts.",
+      },
+      {
+        id: "contact",
+        q: "How can I contact you?",
+        keys: ["contact", "phone", "call", "whatsapp", "email", "speak", "message"],
+        a: "Call or WhatsApp +44 7353 086191, email contact@dropshift.co.uk, or use the quote form. We're East London based with nationwide reach.",
+      },
+      {
+        id: "hours",
+        q: "When can you collect?",
+        keys: ["hours", "when", "same day", "next day", "availability", "booking", "date"],
+        a: "Collections are arranged around your preferred date and site access. Same/next-day options are available by arrangement — ask when you enquire.",
+      },
+    ];
+
+    var chipIds = ["cover", "price", "tail", "business", "contact"];
+
+    function esc(s) {
+      return String(s || "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;");
+    }
+
+    function linkify(text) {
+      return esc(text)
+        .replace(/\+44 7353 086191/g, '<a href="tel:+447353086191">+44 7353 086191</a>')
+        .replace(/contact@dropshift\.co\.uk/g, '<a href="mailto:contact@dropshift.co.uk">contact@dropshift.co.uk</a>')
+        .replace(/quote form/gi, '<a href="#quote">quote form</a>');
+    }
+
+    function addBubble(text, who) {
+      var div = document.createElement("div");
+      div.className = "chat-bubble is-" + who;
+      if (who === "bot") div.innerHTML = linkify(text);
+      else div.textContent = text;
+      log.appendChild(div);
+      log.scrollTop = log.scrollHeight;
+    }
+
+    function score(query, item) {
+      var q = query.toLowerCase();
+      var s = 0;
+      item.keys.forEach(function (k) {
+        if (q.indexOf(k) !== -1) s += k.length > 4 ? 3 : 2;
+      });
+      var words = item.q.toLowerCase().split(/\W+/);
+      words.forEach(function (w) {
+        if (w.length > 3 && q.indexOf(w) !== -1) s += 1;
+      });
+      return s;
+    }
+
+    function answer(query) {
+      var best = null;
+      var bestScore = 0;
+      knowledge.forEach(function (item) {
+        var s = score(query, item);
+        if (s > bestScore) {
+          bestScore = s;
+          best = item;
+        }
+      });
+      if (!best || bestScore < 2) {
+        return "I can help with coverage, quotes, services, vans, insurance and contact. Try a suggested question below — or call / WhatsApp +44 7353 086191 and the team will help straight away.";
+      }
+      return best.a;
+    }
+
+    function renderChips() {
+      if (!chips) return;
+      chips.innerHTML = "";
+      chipIds.forEach(function (id) {
+        var item = knowledge.filter(function (k) {
+          return k.id === id;
+        })[0];
+        if (!item) return;
+        var btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "chat-chip";
+        btn.textContent = item.q;
+        btn.addEventListener("click", function () {
+          ask(item.q);
+        });
+        chips.appendChild(btn);
+      });
+    }
+
+    function ask(text) {
+      var q = String(text || "").trim();
+      if (!q) return;
+      addBubble(q, "user");
+      input.value = "";
+      setTimeout(function () {
+        addBubble(answer(q), "bot");
+      }, 220);
+    }
+
+    function openChat() {
+      panel.hidden = false;
+      panel.setAttribute("aria-hidden", "false");
+      panel.classList.add("is-open");
+      launch.classList.add("is-open");
+      launch.setAttribute("aria-expanded", "true");
+      if (!log.childNodes.length) {
+        addBubble(
+          "Hi — I'm the DropShift FAQ assistant. Ask about coverage, quotes, Luton vans, insurance or services.",
+          "bot"
+        );
+        renderChips();
+      }
+      setTimeout(function () {
+        input.focus();
+      }, 50);
+    }
+
+    function closeChat() {
+      panel.classList.remove("is-open");
+      launch.classList.remove("is-open");
+      launch.setAttribute("aria-expanded", "false");
+      panel.setAttribute("aria-hidden", "true");
+      setTimeout(function () {
+        if (!panel.classList.contains("is-open")) panel.hidden = true;
+      }, 250);
+    }
+
+    launch.addEventListener("click", function () {
+      if (panel.classList.contains("is-open")) closeChat();
+      else openChat();
+    });
+    if (closeBtn) closeBtn.addEventListener("click", closeChat);
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+      ask(input.value);
+    });
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "Escape" && panel.classList.contains("is-open")) closeChat();
+    });
+  })();
+
   /* ---------- Toast ---------- */
   var toastHost = document.getElementById("toastHost");
   function showToast(title, msg, type) {

@@ -599,6 +599,8 @@ gtag('config', 'G-29N0M3VMT6');
       <details><summary>Can you move IT and office equipment?</summary><p>Yes. We handle office relocations including computers, monitors, printers, server and networking equipment, desks, workstations and filing cabinets.</p></details>
       <details><summary>Do you take single items or small jobs?</summary><p>Yes. We transport single items and multiple items, from one piece of furniture to a full house or office move.</p></details>
       <details><summary>How do I get a price?</summary><p>Send us your collection and delivery details using the quote form, WhatsApp or a call. We'll give you a clear, tailored quotation for the job.</p></details>
+      <details><summary>Do your vans have a tail lift?</summary><p>Yes. Our Luton vans are equipped with a tail lift and pallet truck for palletised stock and commercial deliveries.</p></details>
+      <details><summary>Are you insured?</summary><p>Yes. We carry goods-in-transit and public liability cover — amounts are available on request.</p></details>
     </div>
   </div>
 </section>
@@ -653,6 +655,30 @@ gtag('config', 'G-29N0M3VMT6');
 </footer>
 
 <button class="float-contact" type="button" data-open-contact>Contact us</button>
+
+<button class="chat-launch" type="button" id="chatLaunch" aria-expanded="false" aria-controls="chatPanel">
+  <span class="chat-launch-ico" aria-hidden="true">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a4 4 0 0 1-4 4H8l-5 3V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4z"/></svg>
+  </span>
+  <span class="chat-launch-label">Ask us</span>
+</button>
+
+<div class="chat-panel" id="chatPanel" role="dialog" aria-label="DropShift FAQ assistant" aria-hidden="true" hidden>
+  <div class="chat-head">
+    <div class="chat-head-copy">
+      <strong>DropShift assistant</strong>
+      <span>FAQ answers · East London · Nationwide</span>
+    </div>
+    <button type="button" class="chat-close" id="chatClose" aria-label="Close chat">✕</button>
+  </div>
+  <div class="chat-log" id="chatLog" aria-live="polite"></div>
+  <div class="chat-chips" id="chatChips" aria-label="Suggested questions"></div>
+  <form class="chat-form" id="chatForm" autocomplete="off">
+    <label class="visually-hidden" for="chatInput">Ask a question</label>
+    <input id="chatInput" type="text" placeholder="Ask about coverage, quotes, services…" maxlength="240" required>
+    <button class="chat-send" type="submit" aria-label="Send">Send</button>
+  </form>
+</div>
 
 <div class="mobile-bar" aria-label="Quick contact">
   <a href="tel:+447353086191">Call</a>
