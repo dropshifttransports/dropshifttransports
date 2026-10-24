@@ -199,87 +199,6 @@
     gallery.addEventListener("pointerleave", function () { gDown = false; });
   }
 
-  /* ---------- How carousel (drag + arrows) — outside GSAP so it always works ---------- */
-  (function initHowCarousel() {
-    var scroller = document.getElementById("howScroller");
-    if (!scroller) return;
-    var progress = document.querySelector(".how-progress > i");
-    var prevBtn = document.getElementById("howPrev");
-    var nextBtn = document.getElementById("howNext");
-    var cards = scroller.querySelectorAll(".how-card");
-
-    function maxScroll() {
-      return Math.max(0, scroller.scrollWidth - scroller.clientWidth);
-    }
-    function updateProgress() {
-      var max = maxScroll();
-      if (progress) progress.style.width = max > 0 ? (scroller.scrollLeft / max) * 100 + "%" : "0%";
-      if (prevBtn) prevBtn.disabled = scroller.scrollLeft <= 4;
-      if (nextBtn) nextBtn.disabled = scroller.scrollLeft >= max - 4;
-    }
-    function cardStep() {
-      var card = cards[0];
-      if (!card) return Math.round(scroller.clientWidth * 0.8);
-      var styles = window.getComputedStyle(scroller.querySelector(".how-track"));
-      var gap = parseFloat(styles.columnGap || styles.gap) || 16;
-      return card.getBoundingClientRect().width + gap;
-    }
-    function scrollByDir(dir) {
-      scroller.scrollBy({ left: dir * cardStep(), behavior: "smooth" });
-    }
-
-    var down = false;
-    var startX = 0;
-    var scrollL = 0;
-    var moved = false;
-    scroller.addEventListener("pointerdown", function (e) {
-      if (e.pointerType === "mouse" && e.button !== 0) return;
-      down = true;
-      moved = false;
-      startX = e.pageX;
-      scrollL = scroller.scrollLeft;
-      try {
-        scroller.setPointerCapture(e.pointerId);
-      } catch (err) {}
-    });
-    scroller.addEventListener("pointermove", function (e) {
-      if (!down) return;
-      var dx = e.pageX - startX;
-      if (Math.abs(dx) > 3) moved = true;
-      scroller.scrollLeft = scrollL - dx;
-      updateProgress();
-    });
-    function endDrag(e) {
-      down = false;
-      try {
-        if (e && e.pointerId != null) scroller.releasePointerCapture(e.pointerId);
-      } catch (err) {}
-    }
-    scroller.addEventListener("pointerup", endDrag);
-    scroller.addEventListener("pointercancel", endDrag);
-    scroller.addEventListener("scroll", updateProgress, { passive: true });
-    scroller.addEventListener(
-      "wheel",
-      function (e) {
-        if (Math.abs(e.deltaX) > Math.abs(e.deltaY) || e.shiftKey) {
-          e.preventDefault();
-          scroller.scrollLeft += e.deltaX || e.deltaY;
-          updateProgress();
-        } else if (Math.abs(e.deltaY) > 0 && maxScroll() > 0) {
-          /* Convert vertical wheel to horizontal when hovering carousel */
-          e.preventDefault();
-          scroller.scrollLeft += e.deltaY;
-          updateProgress();
-        }
-      },
-      { passive: false }
-    );
-    if (prevBtn) prevBtn.addEventListener("click", function () { scrollByDir(-1); });
-    if (nextBtn) nextBtn.addEventListener("click", function () { scrollByDir(1); });
-    window.addEventListener("resize", updateProgress);
-    updateProgress();
-  })();
-
   /* ---------- FAQ chatbot ---------- */
   (function initFaqChat() {
     var launch = document.getElementById("chatLaunch");
@@ -325,8 +244,14 @@
       {
         id: "price",
         q: "How do I get a price?",
-        keys: ["price", "quote", "cost", "how much", "pricing", "estimate", "rate", "charges"],
-        a: "Use the free quote form on this page, or call / WhatsApp +44 7353 086191. Share collection, delivery and what's moving — we'll send a clear tailored quotation.",
+        keys: ["price", "quote", "cost", "how much", "pricing", "estimate", "rate", "charges", "hourly"],
+        a: "Use the free quote form, call / WhatsApp +44 7353 086191, or see our pricing guide at /pricing/ for what affects man and van prices and house removal cost.",
+      },
+      {
+        id: "areas",
+        q: "Which areas do you cover?",
+        keys: ["hackney", "stratford", "ilford", "canary", "walthamstow", "romford", "near me", "borough"],
+        a: "We're East London based — Hackney, Stratford, Ilford, Canary Wharf, Walthamstow, Romford and nationwide. See /areas/ for local pages.",
       },
       {
         id: "business",
@@ -378,7 +303,7 @@
       },
     ];
 
-    var chipIds = ["manvan", "removals", "furniture", "price", "contact"];
+    var chipIds = ["manvan", "removals", "price", "areas", "contact"];
 
     function esc(s) {
       return String(s || "")
@@ -794,6 +719,13 @@
               payload.name.split(" ")[0] +
               " — we’ve emailed the DropShift team. We’ll get back to you shortly."
           );
+          if (typeof gtag === "function") {
+            gtag("event", "generate_lead", {
+              event_category: "quote",
+              event_label: payload.service || "website-quote",
+              currency: "GBP",
+            });
+          }
         })
         .catch(function () {
           showToast(
