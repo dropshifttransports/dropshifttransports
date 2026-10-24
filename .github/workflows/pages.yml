@@ -22,24 +22,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Inject Brevo API key
-        env:
-          BREVO_API_KEY: ${{ secrets.BREVO_API_KEY }}
-        run: |
-          if [ -z "$BREVO_API_KEY" ]; then
-            echo "BREVO_API_KEY secret is not set" >&2
-            exit 1
-          fi
-          python3 - <<'PY'
-          import os
-          path = "assets/site.js"
-          key = os.environ["BREVO_API_KEY"]
-          text = open(path, encoding="utf-8").read()
-          if "__BREVO_API_KEY__" not in text:
-              raise SystemExit("placeholder missing in assets/site.js")
-          open(path, "w", encoding="utf-8").write(text.replace("__BREVO_API_KEY__", key, 1))
-          print("Brevo key injected")
-          PY
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
