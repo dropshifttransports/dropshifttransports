@@ -129,21 +129,18 @@
 
   function render() {
     var q = calc();
-    var low = Math.max(q.M, q.total * 0.92);
-    var high = q.total * 1.08;
 
     priceEl.textContent = money(q.total);
-    rangeEl.textContent =
-      q.crewLabel + " · usual range " + money(low) + "–" + money(high);
+    rangeEl.textContent = q.crewLabel + " · " + q.loadLabel;
 
     var rows = [
-      ["Labour · " + hours(q.hoursTotal) + " @ " + money(q.R) + "/hr", q.labour],
-      ["Mileage · " + Math.round(q.D) + " miles", q.mileage],
+      ["Labour", q.labour],
+      ["Travel", q.mileage],
     ];
     if (q.H > 0) rows.push(["Heavy items", q.H]);
-    if (q.E > 0) rows.push(["Congestion / parking fees", q.E]);
+    if (q.E > 0) rows.push(["Fees", q.E]);
     if (q.F > 0) rows.push(["Extra stop", q.F]);
-    if (q.minApplied) rows.push(["Minimum booking applied", q.M]);
+    if (q.minApplied) rows.push(["Minimum booking", q.M]);
 
     breakEl.innerHTML = rows
       .map(function (row) {
@@ -157,9 +154,13 @@
       })
       .join("");
 
-    minEl.textContent = q.minApplied
-      ? "A minimum booking of " + money(q.M) + " applies to this job."
-      : "Includes load, unload, drive time, access and mileage.";
+    minEl.textContent =
+      "About " +
+      hours(q.hoursTotal) +
+      " work · " +
+      Math.round(q.D) +
+      " miles" +
+      (q.minApplied ? " · min. " + money(q.M) + " applied" : "");
 
     var summary =
       "Instant estimate " +

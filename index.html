@@ -251,7 +251,7 @@ gtag('config', 'G-29N0M3VMT6');
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,600;0,700;0,800;1,700;1,800&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/site.css">
+<link rel="stylesheet" href="assets/site.css?v=20261026c">
 </head>
 <body>
 
@@ -655,123 +655,114 @@ gtag('config', 'G-29N0M3VMT6');
     </div>
 
     <div class="iq-layout reveal">
-      <form class="iq-form" id="iqForm" novalidate>
-        <div class="iq-block">
-          <h3 class="iq-block-title">Job basics</h3>
-          <div class="iq-grid">
-            <div class="field">
-              <label for="iqCrew">Van &amp; movers</label>
-              <select id="iqCrew">
-                <option value="luton1">Luton van · 1 mover</option>
-                <option value="luton2" selected>Luton van · 2 movers</option>
-              </select>
-            </div>
-            <div class="field">
-              <label for="iqLoad">What are you moving?</label>
-              <select id="iqLoad">
-                <option value="few">Few items / single piece</option>
-                <option value="studio">Studio / bedsitter</option>
-                <option value="bed1" selected>1-bed flat</option>
-                <option value="bed2">2-bed flat / small house</option>
-                <option value="bed3">3-bed+ house</option>
-                <option value="commercial">Small commercial / office</option>
-              </select>
-            </div>
-            <div class="field">
-              <label for="iqMiles">Distance (one way, miles)</label>
-              <input id="iqMiles" type="number" min="1" max="500" step="1" value="12" inputmode="numeric">
-            </div>
-            <div class="field">
-              <label for="iqReturn">Return journey</label>
-              <select id="iqReturn">
-                <option value="1" selected>Include return</option>
-                <option value="0">One way only</option>
-              </select>
-            </div>
-          </div>
-        </div>
-
-        <div class="iq-block">
-          <h3 class="iq-block-title">Access</h3>
-          <div class="iq-grid">
-            <div class="field">
-              <label for="iqFloorsFrom">Collection floor</label>
-              <select id="iqFloorsFrom">
-                <option value="0" selected>Ground</option>
-                <option value="1">1st floor</option>
-                <option value="2">2nd floor</option>
-                <option value="3">3rd+</option>
-              </select>
-            </div>
-            <div class="field">
-              <label for="iqFloorsTo">Delivery floor</label>
-              <select id="iqFloorsTo">
-                <option value="0" selected>Ground</option>
-                <option value="1">1st floor</option>
-                <option value="2">2nd floor</option>
-                <option value="3">3rd+</option>
-              </select>
-            </div>
-            <div class="field">
-              <label for="iqLift">Lift available?</label>
-              <select id="iqLift">
-                <option value="1">Yes — at least one address</option>
-                <option value="0" selected>No — stairs only</option>
-              </select>
-            </div>
-            <div class="field">
-              <label for="iqParking">Parking &amp; access</label>
-              <select id="iqParking">
-                <option value="easy" selected>Easy — close to door</option>
-                <option value="ok">OK — short walk / permit</option>
-                <option value="hard">Restricted — long carry</option>
-              </select>
-            </div>
-            <div class="field full">
-              <label for="iqAssemble">Dismantling / assembly / packing</label>
-              <select id="iqAssemble">
-                <option value="0" selected>Not needed</option>
-                <option value="0.5">Light help (~30 min)</option>
-                <option value="1">Standard (~1 hr)</option>
-                <option value="2">Heavy (~2 hrs)</option>
-              </select>
-            </div>
-          </div>
-        </div>
-
-        <div class="iq-block">
-          <h3 class="iq-block-title">Heavy items</h3>
-          <div class="iq-chips" role="group" aria-label="Heavy items">
-            <label class="iq-chip"><input type="checkbox" name="iqHeavy" value="fridge"><span>Fridge / freezer</span></label>
-            <label class="iq-chip"><input type="checkbox" name="iqHeavy" value="piano"><span>Piano</span></label>
-            <label class="iq-chip"><input type="checkbox" name="iqHeavy" value="safe"><span>Safe</span></label>
-            <label class="iq-chip"><input type="checkbox" name="iqHeavy" value="other"><span>Other heavy</span></label>
-          </div>
-        </div>
-
-        <div class="iq-block">
-          <h3 class="iq-block-title">Extras</h3>
-          <div class="iq-chips" role="group" aria-label="Extras">
-            <label class="iq-chip"><input type="checkbox" id="iqCongestion" value="1"><span>Congestion / ULEZ</span></label>
-            <label class="iq-chip"><input type="checkbox" id="iqParkingFee" value="1"><span>Paid parking</span></label>
-            <label class="iq-chip"><input type="checkbox" id="iqExtraStop" value="1"><span>Extra stop</span></label>
-          </div>
-        </div>
-
-        <p class="iq-fine">Guide price only — exact postcodes and photos may change the final quote.</p>
-      </form>
-
       <aside class="iq-result" id="iqResult" aria-live="polite">
         <p class="iq-result-label">Your estimate</p>
         <p class="iq-price" id="iqPrice">£—</p>
-        <p class="iq-range" id="iqRange">Fill in the job details</p>
+        <p class="iq-range" id="iqRange">Update the details below</p>
         <ul class="iq-breakdown" id="iqBreakdown"></ul>
         <div class="iq-actions">
           <a class="btn btn-accent" href="#quote" id="iqBook">Book this estimate</a>
-          <a class="btn btn-ghost" href="https://wa.me/447353086191" target="_blank" rel="noopener" id="iqWhatsApp">Send on WhatsApp</a>
+          <a class="btn btn-ghost" href="https://wa.me/447353086191" target="_blank" rel="noopener" id="iqWhatsApp">WhatsApp</a>
         </div>
         <p class="iq-min" id="iqMinNote"></p>
       </aside>
+
+      <form class="iq-form" id="iqForm" novalidate>
+        <div class="iq-grid">
+          <div class="field">
+            <label for="iqCrew">Van &amp; movers</label>
+            <select id="iqCrew">
+              <option value="luton1">Luton van · 1 mover</option>
+              <option value="luton2" selected>Luton van · 2 movers</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="iqLoad">What are you moving?</label>
+            <select id="iqLoad">
+              <option value="few">Few items / single piece</option>
+              <option value="studio">Studio / bedsitter</option>
+              <option value="bed1" selected>1-bed flat</option>
+              <option value="bed2">2-bed flat / small house</option>
+              <option value="bed3">3-bed+ house</option>
+              <option value="commercial">Small commercial / office</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="iqMiles">Miles (one way)</label>
+            <input id="iqMiles" type="number" min="1" max="500" step="1" value="12" inputmode="numeric">
+          </div>
+          <div class="field">
+            <label for="iqReturn">Return journey</label>
+            <select id="iqReturn">
+              <option value="1" selected>Include return</option>
+              <option value="0">One way only</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="iqFloorsFrom">Collection floor</label>
+            <select id="iqFloorsFrom">
+              <option value="0" selected>Ground</option>
+              <option value="1">1st floor</option>
+              <option value="2">2nd floor</option>
+              <option value="3">3rd+</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="iqFloorsTo">Delivery floor</label>
+            <select id="iqFloorsTo">
+              <option value="0" selected>Ground</option>
+              <option value="1">1st floor</option>
+              <option value="2">2nd floor</option>
+              <option value="3">3rd+</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="iqLift">Lift available?</label>
+            <select id="iqLift">
+              <option value="1">Yes</option>
+              <option value="0" selected>No — stairs</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="iqParking">Parking</label>
+            <select id="iqParking">
+              <option value="easy" selected>Easy</option>
+              <option value="ok">Short walk / permit</option>
+              <option value="hard">Restricted</option>
+            </select>
+          </div>
+          <div class="field full">
+            <label for="iqAssemble">Assembly / packing help</label>
+            <select id="iqAssemble">
+              <option value="0" selected>Not needed</option>
+              <option value="0.5">Light (~30 min)</option>
+              <option value="1">Standard (~1 hr)</option>
+              <option value="2">Heavy (~2 hrs)</option>
+            </select>
+          </div>
+        </div>
+
+        <fieldset class="iq-fieldset">
+          <legend>Heavy items</legend>
+          <div class="iq-toggles">
+            <label class="iq-toggle"><input type="checkbox" name="iqHeavy" value="fridge"><span>Fridge / freezer</span></label>
+            <label class="iq-toggle"><input type="checkbox" name="iqHeavy" value="piano"><span>Piano</span></label>
+            <label class="iq-toggle"><input type="checkbox" name="iqHeavy" value="safe"><span>Safe</span></label>
+            <label class="iq-toggle"><input type="checkbox" name="iqHeavy" value="other"><span>Other heavy</span></label>
+          </div>
+        </fieldset>
+
+        <fieldset class="iq-fieldset">
+          <legend>Extras</legend>
+          <div class="iq-toggles">
+            <label class="iq-toggle"><input type="checkbox" id="iqCongestion" value="1"><span>Congestion / ULEZ</span></label>
+            <label class="iq-toggle"><input type="checkbox" id="iqParkingFee" value="1"><span>Paid parking</span></label>
+            <label class="iq-toggle"><input type="checkbox" id="iqExtraStop" value="1"><span>Extra stop</span></label>
+          </div>
+        </fieldset>
+
+        <p class="iq-fine">Guide price only. Final quote confirmed when you book.</p>
+      </form>
     </div>
   </div>
 </section>
@@ -975,8 +966,8 @@ gtag('config', 'G-29N0M3VMT6');
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js" defer></script>
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js" defer></script>
 <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.18/dist/lenis.min.js" defer></script>
-<script src="assets/quote-calc.js" defer></script>
-<script src="assets/site.js" defer></script>
+<script src="assets/quote-calc.js?v=20261026c" defer></script>
+<script src="assets/site.js?v=20261026c" defer></script>
 <style>
 @media (max-width:980px){
   .biz-inner{grid-template-columns:1fr!important}
