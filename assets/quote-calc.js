@@ -134,40 +134,19 @@
 
     priceEl.textContent = money(q.total);
     rangeEl.textContent =
-      "Typical band " + money(low) + " – " + money(high) + " · " + q.crewLabel;
+      q.crewLabel + " · usual range " + money(low) + "–" + money(high);
 
     var rows = [
-      ["Labour (" + hours(q.hoursTotal) + " × " + money(q.R) + "/h)", q.labour],
-      [
-        "  T_L load " +
-          hours(q.T_L) +
-          " · T_U unload " +
-          hours(q.T_U) +
-          " · T_D drive " +
-          hours(q.T_D),
-        null,
-      ],
-      [
-        "  T_S access " +
-          hours(q.T_S) +
-          " · T_P parking " +
-          hours(q.T_P) +
-          " · T_A extras " +
-          hours(q.T_A),
-        null,
-      ],
-      ["Mileage (D " + Math.round(q.D) + " mi × " + money(q.C) + ")", q.mileage],
+      ["Labour · " + hours(q.hoursTotal) + " @ " + money(q.R) + "/hr", q.labour],
+      ["Mileage · " + Math.round(q.D) + " miles", q.mileage],
     ];
-    if (q.H > 0) rows.push(["Heavy items (H)", q.H]);
-    if (q.E > 0) rows.push(["Expenses (E)", q.E]);
-    if (q.F > 0) rows.push(["Fixed extras (F)", q.F]);
-    if (q.minApplied) rows.push(["Minimum booking (M) applied", q.M]);
+    if (q.H > 0) rows.push(["Heavy items", q.H]);
+    if (q.E > 0) rows.push(["Congestion / parking fees", q.E]);
+    if (q.F > 0) rows.push(["Extra stop", q.F]);
+    if (q.minApplied) rows.push(["Minimum booking applied", q.M]);
 
     breakEl.innerHTML = rows
       .map(function (row) {
-        if (row[1] == null) {
-          return '<li class="is-note"><span>' + row[0] + "</span></li>";
-        }
         return (
           "<li><span>" +
           row[0] +
@@ -179,8 +158,8 @@
       .join("");
 
     minEl.textContent = q.minApplied
-      ? "Minimum booking charge M = " + money(q.M) + " applied."
-      : "Formula: max(M, time×R + D×C + H + E + F)";
+      ? "A minimum booking of " + money(q.M) + " applies to this job."
+      : "Includes load, unload, drive time, access and mileage.";
 
     var summary =
       "Instant estimate " +
