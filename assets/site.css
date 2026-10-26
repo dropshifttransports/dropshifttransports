@@ -354,6 +354,20 @@ h3{font-size:clamp(1.25rem,2vw,1.55rem)}
 }
 .review-slide cite{font-style:normal;font-size:.9rem;color:var(--text-dim);letter-spacing:.06em;text-transform:uppercase}
 
+/* Hero quick quote links — DropShift text style, not marketplace tiles */
+.hero-quick{
+  display:flex;flex-wrap:wrap;align-items:center;gap:8px 6px;
+  margin-top:22px;max-width:42rem;font-size:.92rem;color:rgba(255,255,255,.72)
+}
+.hero-quick a{
+  color:#fff;font-weight:600;text-decoration:underline;text-decoration-color:rgba(255,255,255,.35);
+  text-underline-offset:3px;padding:0 4px
+}
+.hero-quick a:hover{text-decoration-color:#fff}
+.hero-quick a:not(:last-child)::after{
+  content:"·";margin-left:8px;color:rgba(255,255,255,.4);font-weight:400;text-decoration:none
+}
+
 /* Local pack / GBP CTA */
 .local-pack-cta{background:var(--bg-2);border-top:1px solid var(--line)}
 .local-pack-inner{

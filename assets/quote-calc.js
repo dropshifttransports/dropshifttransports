@@ -12,7 +12,7 @@
     floorHours: 0.35,
     liftFactor: 0.45,
     parking: { easy: 0.15, ok: 0.35, hard: 0.7 },
-    heavy: { fridge: 25, piano: 90, safe: 70, other: 35 },
+    heavy: { fridge: 25, safe: 70, other: 35 },
     congestion: 17.5,
     parkingFee: 12,
     extraStop: 40,
@@ -192,6 +192,22 @@
 
   form.addEventListener("input", render);
   form.addEventListener("change", render);
+
+  function applyPreset(el) {
+    var load = el.getAttribute("data-iq-load");
+    var crew = el.getAttribute("data-iq-crew");
+    var loadEl = document.getElementById("iqLoad");
+    var crewEl = document.getElementById("iqCrew");
+    if (load && loadEl) loadEl.value = load;
+    if (crew && crewEl) crewEl.value = crew;
+    render();
+  }
+
+  document.querySelectorAll("[data-iq-load]").forEach(function (el) {
+    el.addEventListener("click", function () {
+      applyPreset(el);
+    });
+  });
 
   if (bookBtn) {
     bookBtn.addEventListener("click", function () {
