@@ -244,8 +244,8 @@
       {
         id: "price",
         q: "How do I get a price?",
-        keys: ["price", "quote", "cost", "how much", "pricing", "estimate", "rate", "charges", "hourly"],
-        a: "Use the free quote form, call / WhatsApp +44 7353 086191, or see our pricing guide at /pricing/ for what affects man and van prices and house removal cost.",
+        keys: ["price", "quote", "cost", "how much", "pricing", "estimate", "rate", "charges", "hourly", "instant"],
+        a: "Use the Instant quote calculator on this page for a live estimate, then confirm via the booking form or WhatsApp +44 7353 086191. More detail on /pricing/.",
       },
       {
         id: "areas",

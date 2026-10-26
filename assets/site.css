@@ -354,6 +354,51 @@ h3{font-size:clamp(1.25rem,2vw,1.55rem)}
 }
 .review-slide cite{font-style:normal;font-size:.9rem;color:var(--text-dim);letter-spacing:.06em;text-transform:uppercase}
 
+/* Instant quote calculator */
+.iq-sec{background:var(--bg);padding:48px 0;border-top:1px solid var(--line)}
+.iq-head{margin-bottom:28px;max-width:54ch}
+.iq-layout{
+  display:grid;grid-template-columns:1.25fr .85fr;gap:24px;align-items:start
+}
+.iq-form{
+  border:1px solid var(--line);background:var(--bg-2);border-radius:var(--radius);
+  padding:24px 22px 20px
+}
+.iq-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.iq-form .field-label{
+  font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:var(--text-dim);font-weight:600
+}
+.iq-form .field-label .opt,.iq-form label .opt{text-transform:none;letter-spacing:0;font-weight:500;opacity:.75}
+.iq-checks{display:flex;flex-wrap:wrap;gap:10px 14px;margin-top:8px}
+.iq-check{
+  display:inline-flex;align-items:center;gap:8px;font-size:.92rem;color:var(--ink);
+  font-weight:500;cursor:pointer;text-transform:none;letter-spacing:0
+}
+.iq-check input{width:16px;height:16px;accent-color:var(--accent)}
+.iq-fine{margin-top:16px;font-size:.85rem;color:var(--muted);max-width:52ch;line-height:1.45}
+.iq-result{
+  border:1px solid var(--line);background:var(--navy);color:#fff;border-radius:var(--radius);
+  padding:26px 24px;position:sticky;top:calc(var(--header-h) + 16px)
+}
+.iq-result-label{
+  font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:#B3C4E6;font-weight:600;margin-bottom:8px
+}
+.iq-price{
+  font-family:"Barlow Condensed",sans-serif;font-weight:800;font-style:italic;
+  font-size:clamp(2.8rem,6vw,3.6rem);letter-spacing:-.03em;line-height:1;margin-bottom:8px
+}
+.iq-range{color:#B3C4E6;font-size:.95rem;margin-bottom:20px;line-height:1.45}
+.iq-breakdown{list-style:none;display:grid;gap:8px;margin:0 0 22px;padding:0;border-top:1px solid rgba(255,255,255,.12);padding-top:16px}
+.iq-breakdown li{
+  display:flex;justify-content:space-between;gap:12px;font-size:.9rem;color:#D5E2F7
+}
+.iq-breakdown li.is-note{display:block;font-size:.78rem;color:#8FA3C7;line-height:1.4}
+.iq-breakdown strong{color:#fff;font-weight:700;white-space:nowrap}
+.iq-actions{display:grid;gap:10px}
+.iq-result .btn-ghost{border-color:rgba(255,255,255,.35);color:#fff;background:transparent}
+.iq-result .btn-ghost:hover{border-color:#fff;background:rgba(255,255,255,.1)}
+.iq-min{margin-top:14px;font-size:.78rem;color:#8FA3C7;line-height:1.4}
+
 /* Quote */
 .quote{background:var(--bg-2);padding:48px 0}
 .quote-grid{display:grid;grid-template-columns:.9fr 1.1fr;gap:56px;align-items:start}
@@ -600,8 +645,10 @@ h3{font-size:clamp(1.25rem,2vw,1.55rem)}
 .cursor{display:none!important}
 
 @media (max-width:980px){
-  .intro-grid,.coverage,.work-layout,.quote-grid,.svc-panel-body,.foot-grid{grid-template-columns:1fr}
+  .intro-grid,.coverage,.work-layout,.quote-grid,.svc-panel-body,.foot-grid,.iq-layout{grid-template-columns:1fr}
   .seo-links-grid{grid-template-columns:1fr 1fr}
+  .iq-result{position:static}
+  .iq-grid{grid-template-columns:1fr 1fr}
   .how-grid{grid-template-columns:1fr 1fr;gap:14px}
   .why-grid{grid-template-columns:1fr 1fr;gap:12px}
   .svc-preview{display:none}
@@ -626,7 +673,7 @@ h3{font-size:clamp(1.25rem,2vw,1.55rem)}
 }
 @media (max-width:640px){
   .why-grid{grid-template-columns:1fr}
-  .form-grid{grid-template-columns:1fr}
+  .form-grid,.iq-grid{grid-template-columns:1fr}
   .hero-word{font-size:clamp(3rem,18vw,4.5rem)}
   .svc-row-btn{grid-template-columns:48px 1fr auto;gap:12px;padding:24px 4px}
   .how-grid{grid-template-columns:1fr;gap:12px}
