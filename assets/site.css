@@ -354,6 +354,22 @@ h3{font-size:clamp(1.25rem,2vw,1.55rem)}
 }
 .review-slide cite{font-style:normal;font-size:.9rem;color:var(--text-dim);letter-spacing:.06em;text-transform:uppercase}
 
+/* Local pack / GBP CTA */
+.local-pack-cta{background:var(--bg-2);border-top:1px solid var(--line)}
+.local-pack-inner{
+  display:grid;grid-template-columns:1.3fr .7fr;gap:28px;align-items:center
+}
+.local-pack-nap{
+  background:#fff;border:1px solid var(--line);border-radius:var(--radius);
+  padding:22px 22px 20px
+}
+.local-pack-nap h3{
+  font-family:"Barlow",sans-serif;font-style:normal;font-weight:700;
+  font-size:1.15rem;max-width:none;margin-bottom:10px;color:var(--navy)
+}
+.local-pack-nap p{color:var(--muted);font-size:.95rem;margin:0 0 6px}
+.local-pack-nap a{color:var(--accent);font-weight:600}
+
 /* Instant quote calculator */
 .iq-sec{background:var(--bg);padding:48px 0;border-top:1px solid var(--line)}
 .iq-head{margin-bottom:28px;max-width:48ch}
@@ -665,7 +681,7 @@ h3{font-size:clamp(1.25rem,2vw,1.55rem)}
 .cursor{display:none!important}
 
 @media (max-width:980px){
-  .intro-grid,.coverage,.work-layout,.quote-grid,.svc-panel-body,.foot-grid,.iq-layout{grid-template-columns:1fr}
+  .intro-grid,.coverage,.work-layout,.quote-grid,.svc-panel-body,.foot-grid,.iq-layout,.local-pack-inner{grid-template-columns:1fr}
   .seo-links-grid{grid-template-columns:1fr 1fr}
   .iq-result{position:static}
   .iq-grid{grid-template-columns:1fr 1fr}

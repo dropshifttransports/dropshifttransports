@@ -250,8 +250,8 @@
       {
         id: "areas",
         q: "Which areas do you cover?",
-        keys: ["hackney", "stratford", "ilford", "canary", "walthamstow", "romford", "near me", "borough"],
-        a: "We're East London based — Hackney, Stratford, Ilford, Canary Wharf, Walthamstow, Romford and nationwide. See /areas/ for local pages.",
+        keys: ["hackney", "stratford", "ilford", "canary", "walthamstow", "romford", "near me", "borough", "removal near"],
+        a: "We're East London based — Hackney, Stratford, Ilford, Canary Wharf, Walthamstow, Romford and nationwide. See /near-me/ or /areas/, and find us on Google Maps.",
       },
       {
         id: "business",
