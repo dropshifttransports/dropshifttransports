@@ -17,6 +17,8 @@
     congestion: 17.5,
     parkingFee: 12,
     extraStop: 40,
+    /* Provisional one-way miles for internal ballpark only — customer is not asked */
+    defaultMiles: 12,
     crews: {
       luton1: { label: "Luton van · 1 mover", R: 48 },
       luton2: { label: "Luton van · 2 movers", R: 68 },
@@ -51,7 +53,7 @@
   function calc() {
     var crewKey = document.getElementById("iqCrew").value;
     var loadKey = document.getElementById("iqLoad").value;
-    var milesOne = Math.max(1, parseFloat(document.getElementById("iqMiles").value) || 1);
+    var milesOne = RATES.defaultMiles;
     var includeReturn = document.getElementById("iqReturn").value === "1";
     var floorsFrom = parseInt(document.getElementById("iqFloorsFrom").value, 10) || 0;
     var floorsTo = parseInt(document.getElementById("iqFloorsTo").value, 10) || 0;
@@ -139,11 +141,8 @@
       q.crewLabel +
       ", " +
       q.loadLabel +
-      ", ~" +
-      q.milesOne +
-      " mi" +
-      (q.includeReturn ? " + return" : "") +
-      ". Please call with a fixed price."
+      (q.includeReturn ? ", return journey" : ", one way") +
+      ". Please call with a fixed price (confirm miles from postcodes)."
     );
   }
 
@@ -151,7 +150,11 @@
     var parts = [
       "INTERNAL ESTIMATE " + money(q.total),
       q.crewLabel + " · " + q.loadLabel,
-      "~" + q.milesOne + " mi one way" + (q.includeReturn ? " (return included)" : " (one way)"),
+      "Provisional ~" +
+        q.milesOne +
+        " mi one way" +
+        (q.includeReturn ? " (return included)" : " (one way)") +
+        " — confirm from collection/delivery postcodes",
       "Time ~" + hours(q.hoursTotal) + " @ " + money(q.R) + "/h",
       "Labour " + money(q.labour) + " · Travel " + money(q.mileage),
     ];
@@ -183,7 +186,7 @@
     breakEl.innerHTML = [
       "<li><span>Job type</span><strong>" + q.loadLabel + "</strong></li>",
       "<li><span>Crew</span><strong>" + q.crewLabel + "</strong></li>",
-      "<li><span>Distance</span><strong>~" + Math.round(q.D) + " mi</strong></li>",
+      "<li><span>Journey</span><strong>" + (q.includeReturn ? "Return included" : "One way") + "</strong></li>",
       "<li><span>Next step</span><strong>Fixed quote by phone</strong></li>",
     ].join("");
 
@@ -201,9 +204,7 @@
             q.crewLabel +
             ", " +
             q.loadLabel +
-            ", ~" +
-            q.milesOne +
-            " miles. Please call me with a price."
+            ". Please call me with a price."
         );
     }
 
