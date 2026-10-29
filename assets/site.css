@@ -834,6 +834,41 @@ h3{font-size:clamp(1.25rem,2vw,1.55rem)}
   .svc-page .header-phone{display:none}
 }
 
+/* Ads landing — short callback route */
+.ads-land{background:linear-gradient(165deg,#EAF1FC 0%,#F7F9FC 42%,#fff 100%);min-height:100vh;color:var(--navy)}
+.ads-land-header{padding:14px 0;border-bottom:1px solid var(--line);background:rgba(255,255,255,.85);backdrop-filter:blur(8px);position:sticky;top:0;z-index:20}
+.ads-land-header-inner{display:flex;align-items:center;justify-content:space-between;gap:16px}
+.ads-land-header .brand img{height:36px;width:auto}
+.ads-land-phone{font-family:"Barlow Condensed",sans-serif;font-weight:700;font-size:1.05rem;letter-spacing:.04em;color:var(--accent)}
+.ads-land-hero{padding:36px 0 56px}
+.ads-land-grid{display:grid;grid-template-columns:1fr 1.05fr;gap:40px;align-items:start}
+.ads-land-copy h1{
+  font-family:"Barlow Condensed",sans-serif;font-weight:800;font-style:italic;
+  font-size:clamp(2.2rem,5vw,3.4rem);letter-spacing:-.03em;line-height:1.05;margin:8px 0 14px
+}
+.ads-land-copy .lede{margin:0 0 22px}
+.ads-land-actions{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:22px}
+.ads-land-points{list-style:none;display:grid;gap:8px;margin:0;padding:0;color:var(--text-dim);font-size:.95rem}
+.ads-land-points li{padding-left:16px;position:relative}
+.ads-land-points li::before{content:"";position:absolute;left:0;top:.55em;width:7px;height:7px;border-radius:50%;background:var(--accent)}
+.ads-land .quote-form.is-flat{
+  background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:24px 22px;
+  box-shadow:0 18px 40px -28px rgba(10,36,99,.35)
+}
+.ads-land .quote-form.is-flat::before{display:none}
+.ads-land .quote-form h2{
+  font-family:"Barlow Condensed",sans-serif;font-size:1.55rem;font-weight:700;margin:0 0 6px
+}
+.ads-land-foot{padding:20px 0 28px;border-top:1px solid var(--line);font-size:.88rem;color:var(--muted)}
+.ads-land-foot .wrap{display:flex;flex-wrap:wrap;gap:12px 20px;justify-content:space-between;align-items:center}
+.ads-land-foot a:hover{color:var(--accent)}
+
+@media (max-width:900px){
+  .ads-land-grid{grid-template-columns:1fr;gap:28px}
+  .ads-land-hero{padding:24px 0 40px}
+  .ads-land-phone{font-size:.95rem}
+}
+
 @media (prefers-reduced-motion:reduce){
   .marquee-track{animation:none}
   .reveal,.split-line > span{opacity:1;transform:none!important}

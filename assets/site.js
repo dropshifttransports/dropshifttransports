@@ -459,8 +459,9 @@
     setTimeout(close, type === "error" ? 7000 : 5500);
   }
 
-  /* ---------- Multi-step quote → Brevo HTML email + toast ---------- */
+  /* ---------- Quote form → Brevo HTML email + toast ---------- */
   var form = document.getElementById("quoteForm");
+  var isFlatQuote = !!(form && form.classList.contains("is-flat"));
   var steps = [].slice.call(document.querySelectorAll(".form-step"));
   var pills = [].slice.call(document.querySelectorAll("[data-step-pill]"));
   var step = 0;
@@ -511,6 +512,9 @@
         "</td></tr>"
       );
     }
+    var sourceRow = f.leadSource
+      ? row("Lead source", f.leadSource === "google-ads" ? "Google Ads landing (/get-a-quote/)" : f.leadSource)
+      : "";
     var internal = f.internalQuote
       ? '<tr><td style="padding:0 28px 16px"><div style="background:#0A2463;border:1px solid #1659D6;padding:16px 18px"><div style="font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#7FA8FF;font-weight:700;margin-bottom:8px">Internal estimate (do not show customer)</div><div style="font-size:15px;line-height:1.55;color:#fff">' +
         escHtml(f.internalQuote).replace(/\n/g, "<br>") +
@@ -546,6 +550,7 @@
       row("Service", f.service) +
       row("Preferred date", f.date) +
       row("Frequency", f.freq) +
+      sourceRow +
       "</table></td></tr>" +
       internal +
       details +
@@ -570,6 +575,7 @@
       "Delivery: " + f.to,
       f.date ? "Date: " + f.date : null,
       "Frequency: " + (f.freq || "—"),
+      f.leadSource ? "Lead source: " + f.leadSource : null,
       f.internalQuote ? "INTERNAL ESTIMATE: " + f.internalQuote : null,
       f.details ? "Details: " + f.details : null,
     ]
@@ -579,6 +585,7 @@
   }
 
   function showStep(i) {
+    if (isFlatQuote || !steps.length) return;
     step = i;
     steps.forEach(function (s, j) {
       s.classList.toggle("is-on", j === i);
@@ -588,51 +595,53 @@
       d.classList.toggle("is-done", j < i);
     });
   }
-  showStep(0);
+  if (!isFlatQuote) showStep(0);
 
-  document.querySelectorAll("[data-next]").forEach(function (btn) {
-    btn.addEventListener("click", function () {
-      if (step === 0) {
-        var name = document.getElementById("name");
-        var phone = document.getElementById("phone");
-        var bad = false;
-        [name, phone].forEach(function (f) {
-          var ok = f.value.trim() !== "";
-          f.setAttribute("aria-invalid", !ok);
-          if (!ok) bad = true;
-        });
-        if (bad) {
-          err.textContent = "Add your name and phone number to continue.";
-          err.classList.add("show");
-          return;
+  if (!isFlatQuote) {
+    document.querySelectorAll("[data-next]").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        if (step === 0) {
+          var name = document.getElementById("name");
+          var phone = document.getElementById("phone");
+          var bad = false;
+          [name, phone].forEach(function (f) {
+            var ok = f.value.trim() !== "";
+            f.setAttribute("aria-invalid", !ok);
+            if (!ok) bad = true;
+          });
+          if (bad) {
+            err.textContent = "Add your name and phone number to continue.";
+            err.classList.add("show");
+            return;
+          }
+          err.classList.remove("show");
         }
-        err.classList.remove("show");
-      }
-      if (step === 1) {
-        var from = document.getElementById("from");
-        var to = document.getElementById("to");
-        var bad2 = false;
-        [from, to].forEach(function (f) {
-          var ok = f.value.trim() !== "";
-          f.setAttribute("aria-invalid", !ok);
-          if (!ok) bad2 = true;
-        });
-        if (bad2) {
-          err.textContent = "Add collection and delivery locations.";
-          err.classList.add("show");
-          return;
+        if (step === 1) {
+          var from = document.getElementById("from");
+          var to = document.getElementById("to");
+          var bad2 = false;
+          [from, to].forEach(function (f) {
+            var ok = f.value.trim() !== "";
+            f.setAttribute("aria-invalid", !ok);
+            if (!ok) bad2 = true;
+          });
+          if (bad2) {
+            err.textContent = "Add collection and delivery locations.";
+            err.classList.add("show");
+            return;
+          }
+          err.classList.remove("show");
         }
+        showStep(Math.min(step + 1, steps.length - 1));
+      });
+    });
+    document.querySelectorAll("[data-prev]").forEach(function (btn) {
+      btn.addEventListener("click", function () {
         err.classList.remove("show");
-      }
-      showStep(Math.min(step + 1, steps.length - 1));
+        showStep(Math.max(step - 1, 0));
+      });
     });
-  });
-  document.querySelectorAll("[data-prev]").forEach(function (btn) {
-    btn.addEventListener("click", function () {
-      err.classList.remove("show");
-      showStep(Math.max(step - 1, 0));
-    });
-  });
+  }
 
   document.querySelectorAll("[data-service]").forEach(function (a) {
     a.addEventListener("click", function () {
@@ -671,6 +680,7 @@
         return;
       }
       err.classList.remove("show");
+      var leadSource = form.getAttribute("data-lead-source") || "website";
       var payload = {
         name: v("name"),
         phone: v("phone"),
@@ -682,6 +692,7 @@
         freq: v("freq"),
         details: v("details"),
         internalQuote: window.__dropshiftInternalQuote || "",
+        leadSource: leadSource,
       };
       var submitBtn = document.getElementById("quoteSubmit");
       var prevHtml = submitBtn ? submitBtn.innerHTML : "";
@@ -692,6 +703,7 @@
 
       var mail = buildQuoteEmail(payload);
       var subject =
+        (leadSource === "google-ads" ? "[ADS] " : "") +
         "New quote — " +
         payload.name +
         (payload.company ? " / " + payload.company : "") +
@@ -714,7 +726,7 @@
           subject: subject,
           htmlContent: mail.html,
           textContent: mail.text,
-          tags: ["website-quote"],
+          tags: leadSource === "google-ads" ? ["website-quote", "google-ads"] : ["website-quote"],
         }),
       })
         .then(function (r) {
@@ -730,7 +742,7 @@
           if (typeof gtag === "function") {
             gtag("event", "generate_lead", {
               event_category: "quote",
-              event_label: payload.service || "website-quote",
+              event_label: leadSource === "google-ads" ? "google-ads-quote" : payload.service || "website-quote",
               currency: "GBP",
             });
           }
