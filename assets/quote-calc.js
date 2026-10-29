@@ -1,8 +1,9 @@
 /**
- * DropShift instant quotation
+ * DropShift quote calculator
  * Total = max(M, (T_L + T_U + T_D + T_S + T_P + T_A) × R + D × C + H + E + F)
  *
- * Tune RATES below when the client confirms live numbers.
+ * Price is calculated for the DropShift team only (emailed on form submit).
+ * Customers never see £ amounts on this page.
  */
 (function () {
   var RATES = {
@@ -31,13 +32,13 @@
   };
 
   var form = document.getElementById("iqForm");
-  var priceEl = document.getElementById("iqPrice");
+  var statusEl = document.getElementById("iqPrice");
   var rangeEl = document.getElementById("iqRange");
   var breakEl = document.getElementById("iqBreakdown");
   var minEl = document.getElementById("iqMinNote");
   var bookBtn = document.getElementById("iqBook");
   var waBtn = document.getElementById("iqWhatsApp");
-  if (!form || !priceEl) return;
+  if (!form || !statusEl) return;
 
   function money(n) {
     return "£" + Math.round(n).toLocaleString("en-GB");
@@ -124,48 +125,17 @@
       milesOne: milesOne,
       includeReturn: includeReturn,
       heavyLabels: heavyLabels,
+      floorsFrom: floorsFrom,
+      floorsTo: floorsTo,
+      hasLift: hasLift,
+      parkingKey: parkingKey,
+      assemble: assemble,
     };
   }
 
-  function render() {
-    var q = calc();
-
-    priceEl.textContent = money(q.total);
-    rangeEl.textContent = q.crewLabel + " · " + q.loadLabel;
-
-    var rows = [
-      ["Labour", q.labour],
-      ["Travel", q.mileage],
-    ];
-    if (q.H > 0) rows.push(["Heavy items", q.H]);
-    if (q.E > 0) rows.push(["Fees", q.E]);
-    if (q.F > 0) rows.push(["Extra stop", q.F]);
-    if (q.minApplied) rows.push(["Minimum booking", q.M]);
-
-    breakEl.innerHTML = rows
-      .map(function (row) {
-        return (
-          "<li><span>" +
-          row[0] +
-          "</span><strong>" +
-          money(row[1]) +
-          "</strong></li>"
-        );
-      })
-      .join("");
-
-    minEl.textContent =
-      "About " +
-      hours(q.hoursTotal) +
-      " work · " +
-      Math.round(q.D) +
-      " miles" +
-      (q.minApplied ? " · min. " + money(q.M) + " applied" : "");
-
-    var summary =
-      "Instant estimate " +
-      money(q.total) +
-      " (" +
+  function publicSummary(q) {
+    return (
+      "Quote request — " +
       q.crewLabel +
       ", " +
       q.loadLabel +
@@ -173,21 +143,72 @@
       q.milesOne +
       " mi" +
       (q.includeReturn ? " + return" : "") +
-      "). Time " +
-      hours(q.hoursTotal) +
-      " @ " +
-      money(q.R) +
-      "/h. Please confirm fixed quote.";
+      ". Please call with a fixed price."
+    );
+  }
+
+  function internalSummary(q) {
+    var parts = [
+      "INTERNAL ESTIMATE " + money(q.total),
+      q.crewLabel + " · " + q.loadLabel,
+      "~" + q.milesOne + " mi one way" + (q.includeReturn ? " (return included)" : " (one way)"),
+      "Time ~" + hours(q.hoursTotal) + " @ " + money(q.R) + "/h",
+      "Labour " + money(q.labour) + " · Travel " + money(q.mileage),
+    ];
+    if (q.H > 0) parts.push("Heavy " + money(q.H) + " (" + q.heavyLabels.join(", ") + ")");
+    if (q.E > 0) parts.push("Fees " + money(q.E));
+    if (q.F > 0) parts.push("Extra stop " + money(q.F));
+    if (q.minApplied) parts.push("Minimum " + money(q.M) + " applied");
+    parts.push(
+      "Floors " +
+        q.floorsFrom +
+        "→" +
+        q.floorsTo +
+        (q.hasLift ? " (lift)" : " (stairs)") +
+        " · parking " +
+        q.parkingKey
+    );
+    parts.push("Do not show this figure to the customer — call with a fixed quote.");
+    return parts.join(" | ");
+  }
+
+  function render() {
+    var q = calc();
+    var pub = publicSummary(q);
+    var internal = internalSummary(q);
+
+    statusEl.textContent = "We'll call you";
+    rangeEl.textContent = q.crewLabel + " · " + q.loadLabel;
+
+    breakEl.innerHTML = [
+      "<li><span>Job type</span><strong>" + q.loadLabel + "</strong></li>",
+      "<li><span>Crew</span><strong>" + q.crewLabel + "</strong></li>",
+      "<li><span>Distance</span><strong>~" + Math.round(q.D) + " mi</strong></li>",
+      "<li><span>Next step</span><strong>Fixed quote by phone</strong></li>",
+    ].join("");
+
+    minEl.textContent =
+      "Send your details below — we calculate the price internally and call you with a fixed quote. No online price shown.";
 
     if (bookBtn) {
-      bookBtn.dataset.estimate = summary;
+      bookBtn.dataset.publicSummary = pub;
     }
     if (waBtn) {
       waBtn.href =
-        "https://wa.me/447353086191?text=" + encodeURIComponent(summary);
+        "https://wa.me/447353086191?text=" +
+        encodeURIComponent(
+          "Hi DropShift — I'd like a quote. " +
+            q.crewLabel +
+            ", " +
+            q.loadLabel +
+            ", ~" +
+            q.milesOne +
+            " miles. Please call me with a price."
+        );
     }
 
-    window.__dropshiftEstimate = summary;
+    window.__dropshiftPublicSummary = pub;
+    window.__dropshiftInternalQuote = internal;
   }
 
   form.addEventListener("input", render);
@@ -213,15 +234,17 @@
     bookBtn.addEventListener("click", function () {
       var details = document.getElementById("details");
       var service = document.getElementById("service");
-      var summary = bookBtn.dataset.estimate || window.__dropshiftEstimate || "";
+      var summary = bookBtn.dataset.publicSummary || window.__dropshiftPublicSummary || "";
       if (details && summary) {
         var existing = details.value.trim();
-        if (existing.indexOf("Instant estimate") === -1) {
-          details.value = existing
-            ? existing + "\n\n" + summary
-            : summary;
+        if (existing.indexOf("Quote request —") === -1 && existing.indexOf("Instant estimate") === -1) {
+          details.value = existing ? existing + "\n\n" + summary : summary;
         } else {
-          details.value = summary + (existing.indexOf("\n\n") > -1 ? "\n\n" + existing.split("\n\n").slice(1).join("\n\n") : "");
+          details.value =
+            summary +
+            (existing.indexOf("\n\n") > -1
+              ? "\n\n" + existing.split("\n\n").slice(1).join("\n\n")
+              : "");
         }
       }
       if (service) {

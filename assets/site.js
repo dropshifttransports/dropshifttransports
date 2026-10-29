@@ -245,7 +245,7 @@
         id: "price",
         q: "How do I get a price?",
         keys: ["price", "quote", "cost", "how much", "pricing", "estimate", "rate", "charges", "hourly", "instant"],
-        a: "Use the Instant quote calculator on this page for a live estimate, then confirm via the booking form or WhatsApp +44 7353 086191. More detail on /pricing/.",
+        a: "Fill in the quote form on this page with your job details — we calculate the price and call you with a fixed quote. Or WhatsApp / call +44 7353 086191. More detail on /pricing/.",
       },
       {
         id: "areas",
@@ -511,6 +511,11 @@
         "</td></tr>"
       );
     }
+    var internal = f.internalQuote
+      ? '<tr><td style="padding:0 28px 16px"><div style="background:#0A2463;border:1px solid #1659D6;padding:16px 18px"><div style="font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#7FA8FF;font-weight:700;margin-bottom:8px">Internal estimate (do not show customer)</div><div style="font-size:15px;line-height:1.55;color:#fff">' +
+        escHtml(f.internalQuote).replace(/\n/g, "<br>") +
+        "</div></div></td></tr>"
+      : "";
     var details = f.details
       ? '<tr><td style="padding:0 28px 24px"><div style="background:#EAF1FC;border:1px solid #CFDDF4;padding:16px 18px"><div style="font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#4D5B78;font-weight:700;margin-bottom:8px">Job details</div><div style="font-size:15px;line-height:1.55;color:#13203B">' +
         escHtml(f.details).replace(/\n/g, "<br>") +
@@ -542,6 +547,7 @@
       row("Preferred date", f.date) +
       row("Frequency", f.freq) +
       "</table></td></tr>" +
+      internal +
       details +
       '<tr><td style="padding:8px 28px 28px" align="center">' +
       '<a href="' +
@@ -564,6 +570,7 @@
       "Delivery: " + f.to,
       f.date ? "Date: " + f.date : null,
       "Frequency: " + (f.freq || "—"),
+      f.internalQuote ? "INTERNAL ESTIMATE: " + f.internalQuote : null,
       f.details ? "Details: " + f.details : null,
     ]
       .filter(Boolean)
@@ -674,6 +681,7 @@
         date: v("date"),
         freq: v("freq"),
         details: v("details"),
+        internalQuote: window.__dropshiftInternalQuote || "",
       };
       var submitBtn = document.getElementById("quoteSubmit");
       var prevHtml = submitBtn ? submitBtn.innerHTML : "";
@@ -714,10 +722,10 @@
           form.reset();
           showStep(0);
           showToast(
-            "Quote request sent",
+            "Request sent",
             "Thanks " +
               payload.name.split(" ")[0] +
-              " — we’ve emailed the DropShift team. We’ll get back to you shortly."
+              " — we’ll call or WhatsApp you with a fixed quote shortly."
           );
           if (typeof gtag === "function") {
             gtag("event", "generate_lead", {
