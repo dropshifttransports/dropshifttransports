@@ -215,7 +215,7 @@
         id: "manvan",
         q: "Do you offer man and van?",
         keys: ["man and van", "man with a van", "man & van", "hire", "near me", "hourly", "book a man"],
-        a: "Yes — man and van London from East London, including same-day by arrangement and two-man teams. Book online for an instant quote, or see dropshift.co.uk/man-and-van/",
+        a: "Yes — man and van London from East London, including same-day by arrangement and two-man teams. Book online and we’ll call with a quote, or see dropshift.co.uk/man-and-van/",
       },
       {
         id: "removals",
