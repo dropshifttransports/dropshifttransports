@@ -53,16 +53,27 @@
   function calc() {
     var crewKey = document.getElementById("iqCrew").value;
     var loadKey = document.getElementById("iqLoad").value;
-    var milesOne = RATES.defaultMiles;
-    var includeReturn = document.getElementById("iqReturn").value === "1";
-    var floorsFrom = parseInt(document.getElementById("iqFloorsFrom").value, 10) || 0;
-    var floorsTo = parseInt(document.getElementById("iqFloorsTo").value, 10) || 0;
-    var hasLift = document.getElementById("iqLift").value === "1";
+    var returnVal = document.getElementById("iqReturn").value;
+    var floorsFromVal = document.getElementById("iqFloorsFrom").value;
+    var floorsToVal = document.getElementById("iqFloorsTo").value;
+    var liftVal = document.getElementById("iqLift").value;
     var parkingKey = document.getElementById("iqParking").value;
-    var assemble = parseFloat(document.getElementById("iqAssemble").value) || 0;
+    var assembleVal = document.getElementById("iqAssemble").value;
 
-    var crew = RATES.crews[crewKey] || RATES.crews.luton2;
-    var load = RATES.loads[loadKey] || RATES.loads.bed1;
+    if (!crewKey || !loadKey || returnVal === "" || floorsFromVal === "" || floorsToVal === "" || liftVal === "" || !parkingKey || assembleVal === "") {
+      return null;
+    }
+
+    var milesOne = RATES.defaultMiles;
+    var includeReturn = returnVal === "1";
+    var floorsFrom = parseInt(floorsFromVal, 10) || 0;
+    var floorsTo = parseInt(floorsToVal, 10) || 0;
+    var hasLift = liftVal === "1";
+    var assemble = parseFloat(assembleVal) || 0;
+
+    var crew = RATES.crews[crewKey];
+    var load = RATES.loads[loadKey];
+    if (!crew || !load) return null;
     var R = crew.R;
     var M = RATES.M;
     var C = RATES.C;
@@ -175,8 +186,30 @@
     return parts.join(" | ");
   }
 
+  function renderEmpty() {
+    statusEl.textContent = "We'll call you";
+    rangeEl.textContent = "Choose the job details below";
+    breakEl.innerHTML =
+      "<li><span>Status</span><strong>Waiting for your choices</strong></li>" +
+      "<li><span>Next step</span><strong>Fill the form, then send details</strong></li>";
+    minEl.textContent =
+      "Nothing is pre-filled — pick each option, then send your contact details. We call with a fixed quote.";
+    if (bookBtn) bookBtn.dataset.publicSummary = "";
+    if (waBtn) {
+      waBtn.href =
+        "https://wa.me/447353086191?text=" +
+        encodeURIComponent("Hi DropShift — I'd like a quote. Please call me with a price.");
+    }
+    window.__dropshiftPublicSummary = "";
+    window.__dropshiftInternalQuote = "";
+  }
+
   function render() {
     var q = calc();
+    if (!q) {
+      renderEmpty();
+      return;
+    }
     var pub = publicSummary(q);
     var internal = internalSummary(q);
 

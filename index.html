@@ -696,21 +696,23 @@ gtag('config', 'G-29N0M3VMT6');
         <p class="iq-min" id="iqMinNote"></p>
       </aside>
 
-      <form class="iq-form" id="iqForm" novalidate>
+      <form class="iq-form" id="iqForm" novalidate autocomplete="off">
         <div class="iq-grid">
           <div class="field">
             <label for="iqCrew">Van &amp; movers</label>
-            <select id="iqCrew">
+            <select id="iqCrew" required autocomplete="off">
+              <option value="" selected disabled>Select…</option>
               <option value="luton1">Luton van · 1 mover</option>
-              <option value="luton2" selected>Luton van · 2 movers</option>
+              <option value="luton2">Luton van · 2 movers</option>
             </select>
           </div>
           <div class="field">
             <label for="iqLoad">What are you moving?</label>
-            <select id="iqLoad">
+            <select id="iqLoad" required autocomplete="off">
+              <option value="" selected disabled>Select…</option>
               <option value="few">Few items / single piece</option>
               <option value="studio">Studio / bedsitter</option>
-              <option value="bed1" selected>1-bed flat</option>
+              <option value="bed1">1-bed flat</option>
               <option value="bed2">2-bed flat / small house</option>
               <option value="bed3">3-bed+ house</option>
               <option value="commercial">Small commercial / office</option>
@@ -718,15 +720,17 @@ gtag('config', 'G-29N0M3VMT6');
           </div>
           <div class="field">
             <label for="iqReturn">Return journey</label>
-            <select id="iqReturn">
-              <option value="1" selected>Include return</option>
+            <select id="iqReturn" required autocomplete="off">
+              <option value="" selected disabled>Select…</option>
+              <option value="1">Include return</option>
               <option value="0">One way only</option>
             </select>
           </div>
           <div class="field">
             <label for="iqFloorsFrom">Collection floor</label>
-            <select id="iqFloorsFrom">
-              <option value="0" selected>Ground</option>
+            <select id="iqFloorsFrom" required autocomplete="off">
+              <option value="" selected disabled>Select…</option>
+              <option value="0">Ground</option>
               <option value="1">1st floor</option>
               <option value="2">2nd floor</option>
               <option value="3">3rd+</option>
@@ -734,8 +738,9 @@ gtag('config', 'G-29N0M3VMT6');
           </div>
           <div class="field">
             <label for="iqFloorsTo">Delivery floor</label>
-            <select id="iqFloorsTo">
-              <option value="0" selected>Ground</option>
+            <select id="iqFloorsTo" required autocomplete="off">
+              <option value="" selected disabled>Select…</option>
+              <option value="0">Ground</option>
               <option value="1">1st floor</option>
               <option value="2">2nd floor</option>
               <option value="3">3rd+</option>
@@ -743,23 +748,26 @@ gtag('config', 'G-29N0M3VMT6');
           </div>
           <div class="field">
             <label for="iqLift">Lift available?</label>
-            <select id="iqLift">
+            <select id="iqLift" required autocomplete="off">
+              <option value="" selected disabled>Select…</option>
               <option value="1">Yes</option>
-              <option value="0" selected>No — stairs</option>
+              <option value="0">No — stairs</option>
             </select>
           </div>
           <div class="field">
             <label for="iqParking">Parking</label>
-            <select id="iqParking">
-              <option value="easy" selected>Easy</option>
+            <select id="iqParking" required autocomplete="off">
+              <option value="" selected disabled>Select…</option>
+              <option value="easy">Easy</option>
               <option value="ok">Short walk / permit</option>
               <option value="hard">Restricted</option>
             </select>
           </div>
           <div class="field full">
             <label for="iqAssemble">Assembly / packing help</label>
-            <select id="iqAssemble">
-              <option value="0" selected>Not needed</option>
+            <select id="iqAssemble" required autocomplete="off">
+              <option value="" selected disabled>Select…</option>
+              <option value="0">Not needed</option>
               <option value="0.5">Light (~30 min)</option>
               <option value="1">Standard (~1 hr)</option>
               <option value="2">Heavy (~2 hrs)</option>
@@ -804,7 +812,7 @@ gtag('config', 'G-29N0M3VMT6');
         <span>East London · Nationwide UK</span>
       </div>
     </div>
-    <form class="quote-form reveal" id="quoteForm" novalidate>
+    <form class="quote-form reveal" id="quoteForm" novalidate autocomplete="off">
       <div class="form-steps" role="list" aria-label="Quote steps">
         <div class="form-step-pill is-on" data-step-pill="0" role="listitem"><span class="n">1</span><span class="t">Details<small>Contact</small></span></div>
         <div class="form-step-pill" data-step-pill="1" role="listitem"><span class="n">2</span><span class="t">Route<small>Collection</small></span></div>
@@ -815,11 +823,12 @@ gtag('config', 'G-29N0M3VMT6');
         <h3>Your details</h3>
         <p class="hint">Step 1 of 3 — who should we contact?</p>
         <div class="form-grid">
-          <div class="field"><label for="name">Your name</label><input id="name" autocomplete="name" required></div>
-          <div class="field"><label for="phone">Phone number</label><input id="phone" type="tel" autocomplete="tel" required></div>
-          <div class="field full"><label for="company">Company <span class="opt">(optional)</span></label><input id="company" autocomplete="organization"></div>
+          <div class="field"><label for="name">Your name</label><input id="name" name="name" autocomplete="off" required></div>
+          <div class="field"><label for="phone">Phone number</label><input id="phone" name="phone" type="tel" autocomplete="off" required></div>
+          <div class="field full"><label for="company">Company <span class="opt">(optional)</span></label><input id="company" name="company" autocomplete="off"></div>
           <div class="field full"><label for="service">Service</label>
-            <select id="service">
+            <select id="service" name="service" autocomplete="off">
+              <option value="" selected disabled>Select…</option>
               <option>Commercial transport &amp; warehouse logistics</option>
               <option>Office, corporate &amp; IT relocation</option>
               <option>Furniture &amp; residential removal</option>
@@ -837,11 +846,17 @@ gtag('config', 'G-29N0M3VMT6');
         <h3>Collection &amp; delivery</h3>
         <p class="hint">Step 2 of 3 — where is the job?</p>
         <div class="form-grid">
-          <div class="field"><label for="from">Collection postcode or town</label><input id="from" required></div>
-          <div class="field"><label for="to">Delivery postcode or town</label><input id="to" placeholder="Several drops? Separate with commas" required></div>
-          <div class="field"><label for="date">Preferred date <span class="opt">(optional)</span></label><input id="date" type="date"></div>
+          <div class="field"><label for="from">Collection postcode or town</label><input id="from" name="from" autocomplete="off" required></div>
+          <div class="field"><label for="to">Delivery postcode or town</label><input id="to" name="to" autocomplete="off" placeholder="Several drops? Separate with commas" required></div>
+          <div class="field"><label for="date">Preferred date <span class="opt">(optional)</span></label><input id="date" name="date" type="date" autocomplete="off"></div>
           <div class="field"><label for="freq">How often? <span class="opt">(optional)</span></label>
-            <select id="freq"><option>One-off job</option><option>Weekly</option><option>Scheduled / recurring</option><option>Not sure yet</option></select>
+            <select id="freq" name="freq" autocomplete="off">
+              <option value="" selected disabled>Select…</option>
+              <option>One-off job</option>
+              <option>Weekly</option>
+              <option>Scheduled / recurring</option>
+              <option>Not sure yet</option>
+            </select>
           </div>
         </div>
         <div class="form-nav">
@@ -854,7 +869,7 @@ gtag('config', 'G-29N0M3VMT6');
         <h3>Job details</h3>
         <p class="hint">Step 3 of 3 — anything we should know?</p>
         <div class="form-grid">
-          <div class="field full"><label for="details">What's being moved? <span class="opt">(optional)</span></label><textarea id="details" placeholder="For example: 6 pallets of stock, 20 workstations and monitors, or a 2-bed flat"></textarea></div>
+          <div class="field full"><label for="details">What's being moved? <span class="opt">(optional)</span></label><textarea id="details" name="details" autocomplete="off" placeholder="For example: 6 pallets of stock, 20 workstations and monitors, or a 2-bed flat"></textarea></div>
         </div>
         <div class="field" style="position:absolute;left:-9999px;height:0;overflow:hidden" aria-hidden="true"><label for="website">Website</label><input id="website" name="website" tabindex="-1" autocomplete="off"></div>
         <div class="form-nav">
@@ -994,8 +1009,8 @@ gtag('config', 'G-29N0M3VMT6');
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js" defer></script>
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js" defer></script>
 <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.18/dist/lenis.min.js" defer></script>
-<script src="assets/quote-calc.js?v=20261029c" defer></script>
-<script src="assets/site.js?v=20261029c" defer></script>
+<script src="assets/quote-calc.js?v=20261029d" defer></script>
+<script src="assets/site.js?v=20261029d" defer></script>
 <style>
 @media (max-width:980px){
   .biz-inner{grid-template-columns:1fr!important}
