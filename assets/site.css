@@ -837,23 +837,41 @@ h3{font-size:clamp(1.25rem,2vw,1.55rem)}
 /* Ads landing — short callback route */
 .ads-land{background:linear-gradient(165deg,#EAF1FC 0%,#F7F9FC 42%,#fff 100%);min-height:100vh;color:var(--navy)}
 .ads-land-header{padding:14px 0;border-bottom:1px solid var(--line);background:rgba(255,255,255,.85);backdrop-filter:blur(8px);position:sticky;top:0;z-index:20}
+.ads-land-header--navy{background:var(--navy);border-bottom:0}
 .ads-land-header-inner{display:flex;align-items:center;justify-content:space-between;gap:16px}
 .ads-land-header .brand img{height:36px;width:auto}
 .ads-land-phone{font-family:"Barlow Condensed",sans-serif;font-weight:700;font-size:1.05rem;letter-spacing:.04em;color:var(--accent)}
+.ads-land-phone--light{color:#fff}
+.ads-land-phone--light:hover{color:var(--accent-soft)}
 .ads-land-hero{padding:36px 0 56px}
-.ads-land-grid{display:grid;grid-template-columns:1fr 1.05fr;gap:40px;align-items:start}
+.ads-land-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:40px;align-items:start}
 .ads-land-copy h1{
   font-family:"Barlow Condensed",sans-serif;font-weight:800;font-style:italic;
-  font-size:clamp(2.2rem,5vw,3.4rem);letter-spacing:-.03em;line-height:1.05;margin:8px 0 14px
+  font-size:clamp(2rem,4.5vw,3.1rem);letter-spacing:-.03em;line-height:1.08;margin:8px 0 14px
 }
-.ads-land-copy .lede{margin:0 0 22px}
-.ads-land-actions{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:22px}
-.ads-land-points{list-style:none;display:grid;gap:8px;margin:0;padding:0;color:var(--text-dim);font-size:.95rem}
-.ads-land-points li{padding-left:16px;position:relative}
-.ads-land-points li::before{content:"";position:absolute;left:0;top:.55em;width:7px;height:7px;border-radius:50%;background:var(--accent)}
+.ads-land-copy .lede{margin:0 0 18px;max-width:42ch}
+.ads-price-row{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:0 0 18px}
+.ads-price-card{
+  background:#fff;border:1px solid var(--line);border-radius:var(--radius-sm);padding:12px 10px;text-align:center
+}
+.ads-price-card strong{display:block;font-family:"Barlow Condensed",sans-serif;font-size:1.25rem;color:var(--navy);margin-bottom:2px}
+.ads-price-card span{font-size:.78rem;color:var(--muted);line-height:1.3}
+.ads-land-actions{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:16px}
+.btn-call-lg{padding:16px 22px;font-size:1rem}
+.ads-trust-row{margin:0 0 16px}
+.ads-stars{color:var(--accent);font-weight:600;margin:0 0 6px}
+.ads-stars strong{color:var(--navy)}
+.ads-insure{margin:0;font-size:.88rem;color:var(--muted)}
+.ads-photos{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:0 0 18px}
+.ads-photos img{width:100%;height:88px;object-fit:cover;border-radius:var(--radius-sm)}
+.ads-review{
+  margin:0 0 12px;padding:14px 16px;background:#fff;border:1px solid var(--line);border-radius:var(--radius-sm)
+}
+.ads-review p{margin:0 0 8px;font-size:.95rem;line-height:1.45;color:var(--navy)}
+.ads-review cite{font-style:normal;font-size:.78rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
 .ads-land .quote-form.is-flat{
   background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:24px 22px;
-  box-shadow:0 18px 40px -28px rgba(10,36,99,.35)
+  box-shadow:0 18px 40px -28px rgba(10,36,99,.35);position:sticky;top:72px
 }
 .ads-land .quote-form.is-flat::before{display:none}
 .ads-land .quote-form h2{
@@ -862,11 +880,30 @@ h3{font-size:clamp(1.25rem,2vw,1.55rem)}
 .ads-land-foot{padding:20px 0 28px;border-top:1px solid var(--line);font-size:.88rem;color:var(--muted)}
 .ads-land-foot .wrap{display:flex;flex-wrap:wrap;gap:12px 20px;justify-content:space-between;align-items:center}
 .ads-land-foot a:hover{color:var(--accent)}
+.hero-trust{
+  display:flex;flex-wrap:wrap;gap:10px 16px;align-items:center;margin-top:18px;
+  font-size:.9rem;color:rgba(255,255,255,.88)
+}
+.hero-trust .stars{color:#FFC857;letter-spacing:.08em}
+.hero-price-pill{
+  display:inline-flex;gap:8px;flex-wrap:wrap;margin-top:12px
+}
+.hero-price-pill span{
+  border:1px solid rgba(255,255,255,.35);padding:8px 12px;border-radius:var(--radius-sm);
+  font-size:.82rem;font-weight:600;color:#fff;background:rgba(10,36,99,.35)
+}
+.price-table{width:100%;border-collapse:collapse;margin:18px 0 28px;font-size:.98rem}
+.price-table th,.price-table td{padding:12px 14px;border:1px solid var(--line);text-align:left}
+.price-table th{background:var(--navy);color:#fff;font-family:"Barlow Condensed",sans-serif;letter-spacing:.04em}
+.price-table tr:nth-child(even) td{background:var(--bg-2)}
 
 @media (max-width:900px){
   .ads-land-grid{grid-template-columns:1fr;gap:28px}
   .ads-land-hero{padding:24px 0 40px}
   .ads-land-phone{font-size:.95rem}
+  .ads-price-row{grid-template-columns:1fr}
+  .ads-land .quote-form.is-flat{position:static}
+  .ads-photos img{height:72px}
 }
 
 @media (prefers-reduced-motion:reduce){

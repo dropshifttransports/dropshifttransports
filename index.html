@@ -265,7 +265,14 @@ gtag('config', 'G-29N0M3VMT6');
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,600;0,700;0,800;1,700;1,800&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/site.css?v=20261029a">
+<link rel="stylesheet" href="assets/site.css?v=20261031a">
+<script>
+/* After Google Ads conversions exist, uncomment and fill:
+window.DROPSHIFT_GOOGLE_ADS_ID = 'AW-xxxxxxxxxx';
+window.DROPSHIFT_ADS_CONV = { phone: 'label', whatsapp: 'label', form: 'label' };
+window.DROPSHIFT_QUOTE_API = 'https://your-worker.workers.dev';
+*/
+</script>
 </head>
 <body>
 
@@ -303,29 +310,30 @@ gtag('config', 'G-29N0M3VMT6');
 
 <section class="hero" id="hero">
   <div class="hero-media" aria-hidden="true">
-    <img src="assets/hero-commercial.jpg" alt="" width="1024" height="682" fetchpriority="high">
-    <!-- Drop optional hero.mp4 / hero.webm here later -->
+    <img src="assets/hallway-move.jpg" alt="" width="1086" height="1448" fetchpriority="high">
   </div>
   <div class="hero-copy">
     <div class="hero-word">DropShift<span class="label">Transport</span></div>
-    <h1><span class="split-line"><span>Man and van London</span></span><span class="split-line"><span>— Luton van transport across the UK.</span></span></h1>
-    <p class="lede">Book a man and van near you for house removals, furniture delivery, pallet runs and same-day courier work — East London based, nationwide reach, fully insured — we’ll call with a fixed price.</p>
-    <div class="hero-actions">
-      <a class="btn btn-accent btn-magnetic" href="#instant-quote">Get a quote</a>
-      <a class="btn btn-ghost" href="tel:+447353086191">+44 7353 086191</a>
+    <h1><span class="split-line"><span>Man and van London</span></span><span class="split-line"><span>— house removals &amp; furniture delivery.</span></span></h1>
+    <p class="lede">East London crew, Luton vans, fully insured. Guide prices from £48/hr — we confirm a fixed quote when you call or book.</p>
+    <div class="hero-price-pill" aria-label="Guide prices">
+      <span>From £48/hr · 1 mover</span>
+      <span>From £68/hr · 2 movers</span>
+      <span>Jobs from £85</span>
     </div>
+    <div class="hero-actions">
+      <a class="btn btn-accent btn-magnetic" href="tel:+447353086191" data-track="phone">Call +44 7353 086191</a>
+      <a class="btn btn-ghost" href="#quote">Get a quote</a>
+    </div>
+    <p class="hero-trust"><span class="stars" aria-hidden="true">★★★★★</span> 5.0 on Google · 19 reviews · Same-day when available</p>
     <p class="hero-quick" aria-label="Quick quote types">
       Quote for
-      <a href="#instant-quote" data-iq-load="bed2" data-iq-crew="luton2">home removals</a>
-      <a href="#instant-quote" data-iq-load="few" data-iq-crew="luton2">furniture</a>
-      <a href="#instant-quote" data-iq-load="few" data-iq-crew="luton1">man &amp; van</a>
-      <a href="#instant-quote" data-iq-load="commercial" data-iq-crew="luton2">office</a>
-      <a href="#instant-quote" data-iq-load="studio" data-iq-crew="luton2">small moves</a>
+      <a href="#quote">home removals</a>
+      <a href="#quote">furniture</a>
+      <a href="#quote">man &amp; van</a>
+      <a href="#quote">office</a>
+      <a href="#quote">small moves</a>
     </p>
-    <div class="hero-cycler" aria-live="polite">
-      <div class="cycler-count" id="cyclerCount">01 / 04</div>
-      <div class="cycler-label" id="cyclerLabel">Commercial &amp; warehouse logistics</div>
-    </div>
   </div>
 </section>
 
@@ -354,7 +362,7 @@ gtag('config', 'G-29N0M3VMT6');
       <article class="why-card"><span class="num">01</span><h3>Fast personal quote</h3><p>Tell us the job online — we call you back with a clear fixed price.</p></article>
       <article class="why-card"><span class="num">02</span><h3>East London · nationwide</h3><p>Local base with collections and deliveries across Greater London and the UK.</p></article>
       <article class="why-card"><span class="num">03</span><h3>Tail-lift Luton vans</h3><p>Tail lift and pallet truck for stock, furniture and awkward commercial loads.</p></article>
-      <article class="why-card"><span class="num">04</span><h3>Fully insured</h3><p>Goods-in-transit and public liability cover — amounts available on request.</p></article>
+      <article class="why-card"><span class="num">04</span><h3>Fully insured</h3><p>Goods-in-transit and public liability cover. Cover amounts confirmed on your quote.</p></article>
       <article class="why-card"><span class="num">05</span><h3>Flexible dates</h3><p>Seven days a week by arrangement — same-day when diaries allow.</p></article>
       <article class="why-card"><span class="num">06</span><h3>WhatsApp booking</h3><p>Ask questions, send photos and get updates on WhatsApp throughout the job.</p></article>
     </div>
@@ -679,8 +687,8 @@ gtag('config', 'G-29N0M3VMT6');
   <div class="wrap">
     <div class="iq-head">
       <p class="eyebrow reveal">Get a quote</p>
-      <h2 class="reveal" data-split>Tell us the job — we’ll call with a price</h2>
-      <p class="lede reveal" style="margin-top:14px">Fill in the basics below. We work out the quote in the background and contact you with a fixed price — nothing is shown online.</p>
+      <h2 class="reveal" data-split>Tell us the job — guide from £48/hr</h2>
+      <p class="lede reveal" style="margin-top:14px">Pick the job basics, then send your details. Guide rates: from £48/hr (1 mover) · from £68/hr (2 movers) · jobs from £85. We call with your fixed price.</p>
     </div>
 
     <div class="iq-layout reveal">
@@ -899,7 +907,7 @@ gtag('config', 'G-29N0M3VMT6');
       <details><summary>Do you offer man and van hire?</summary><p>Yes. We provide man and van London services — local man with a van, man and van for furniture, two-man teams and same-day options by arrangement. <a href="/man-and-van/">Man and van details</a>.</p></details>
       <details><summary>Do you do same-day removals or courier work?</summary><p>Same-day removals, urgent man and van and same day courier jobs are available across Greater London when diaries allow. Call or WhatsApp for instant availability.</p></details>
       <details><summary>Do your vans have a tail lift?</summary><p>Yes. Our Luton vans are equipped with a tail lift and pallet truck for palletised stock and commercial deliveries. See <a href="/pallet-delivery/">pallet delivery UK</a>.</p></details>
-      <details><summary>Are you insured?</summary><p>Yes. We are a fully insured removal company with goods-in-transit and public liability cover — amounts are available on request.</p></details>
+      <details><summary>Are you insured?</summary><p>Yes. We are a fully insured removal company with goods-in-transit and public liability cover. We’ll confirm cover amounts when we quote.</p></details>
     </div>
   </div>
 </section>
@@ -933,8 +941,8 @@ gtag('config', 'G-29N0M3VMT6');
         <ul>
           <li><a href="/near-me/">Removals near me</a></li>
           <li><a href="/areas/">East London areas</a></li>
-          <li><a href="/google-listing/">Google listing checklist</a></li>
           <li><a href="/guides/">Moving guides</a></li>
+          <li><a href="/get-a-quote/">Ads quote page</a></li>
           <li><a href="#instant-quote">Get a quote</a></li>
           <li><a href="privacy.html">Privacy policy</a></li>
         </ul>
@@ -1009,8 +1017,8 @@ gtag('config', 'G-29N0M3VMT6');
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js" defer></script>
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js" defer></script>
 <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.18/dist/lenis.min.js" defer></script>
-<script src="assets/quote-calc.js?v=20261029d" defer></script>
-<script src="assets/site.js?v=20261029d" defer></script>
+<script src="assets/quote-calc.js?v=20261031a" defer></script>
+<script src="assets/site.js?v=20261031a" defer></script>
 <style>
 @media (max-width:980px){
   .biz-inner{grid-template-columns:1fr!important}

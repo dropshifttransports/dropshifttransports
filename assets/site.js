@@ -459,29 +459,59 @@
     setTimeout(close, type === "error" ? 7000 : 5500);
   }
 
-  /* ---------- Quote form → Brevo HTML email + toast ---------- */
+  /* ---------- Analytics: phone / WhatsApp / Ads ---------- */
+  function trackEvent(name, params) {
+    if (typeof gtag === "function") {
+      gtag("event", name, params || {});
+    }
+  }
+  function trackAdsConversion(sendTo) {
+    if (typeof gtag !== "function" || !window.DROPSHIFT_GOOGLE_ADS_ID) return;
+    var id = window.DROPSHIFT_GOOGLE_ADS_ID;
+    var label = sendTo || window.DROPSHIFT_ADS_CONV || {};
+    if (label.phone) gtag("event", "conversion", { send_to: id + "/" + label.phone });
+  }
+  document.addEventListener("click", function (e) {
+    var a = e.target.closest && e.target.closest("a");
+    if (!a || !a.href) return;
+    var href = a.getAttribute("href") || "";
+    if (href.indexOf("tel:") === 0 || a.getAttribute("data-track") === "phone") {
+      trackEvent("phone_click", { event_category: "contact", event_label: href });
+      if (
+        typeof gtag === "function" &&
+        window.DROPSHIFT_GOOGLE_ADS_ID &&
+        window.DROPSHIFT_ADS_CONV &&
+        window.DROPSHIFT_ADS_CONV.phone
+      ) {
+        gtag("event", "conversion", {
+          send_to: window.DROPSHIFT_GOOGLE_ADS_ID + "/" + window.DROPSHIFT_ADS_CONV.phone,
+        });
+      }
+    }
+    if (href.indexOf("wa.me") !== -1 || href.indexOf("whatsapp") !== -1 || a.getAttribute("data-track") === "whatsapp") {
+      trackEvent("whatsapp_click", { event_category: "contact", event_label: "whatsapp" });
+      if (
+        typeof gtag === "function" &&
+        window.DROPSHIFT_GOOGLE_ADS_ID &&
+        window.DROPSHIFT_ADS_CONV &&
+        window.DROPSHIFT_ADS_CONV.whatsapp
+      ) {
+        gtag("event", "conversion", {
+          send_to: window.DROPSHIFT_GOOGLE_ADS_ID + "/" + window.DROPSHIFT_ADS_CONV.whatsapp,
+        });
+      }
+    }
+  });
+
+  /* ---------- Quote form → secure API (or WhatsApp fallback) ---------- */
   var form = document.getElementById("quoteForm");
   var isFlatQuote = !!(form && form.classList.contains("is-flat"));
   var steps = [].slice.call(document.querySelectorAll(".form-step"));
   var pills = [].slice.call(document.querySelectorAll("[data-step-pill]"));
   var step = 0;
   var err = document.getElementById("formError");
-  /* Local override: window.DROPSHIFT_BREVO_KEY */
-  var BREVO_API_KEY =
-    window.DROPSHIFT_BREVO_KEY ||
-    (typeof atob === "function"
-      ? atob(
-          [
-            "eGtleXNpYi1mODg4MWJi",
-            "YzlkYjJmZTUxOGMzNDJk",
-            "OGQ1NTE2YTNiMGJiNWQ4",
-            "YzFlMzA0ZWM5OTUxODAy",
-            "ZmE2OThmYTI4NTAwLWRl",
-            "cVh1cmw3c1FDemZhTUI=",
-          ].join("")
-        )
-      : "");
-  var BREVO_URL = "https://api.brevo.com/v3/smtp/email";
+  /* Server endpoint (Cloudflare Worker). Set window.DROPSHIFT_QUOTE_API before site.js loads. */
+  var QUOTE_API = window.DROPSHIFT_QUOTE_API || "";
   var QUOTE_TO = "contact@dropshift.co.uk";
 
   function escHtml(s) {
@@ -701,58 +731,68 @@
         submitBtn.textContent = "Sending…";
       }
 
-      var mail = buildQuoteEmail(payload);
-      var subject =
-        (leadSource === "google-ads" ? "[ADS] " : "") +
-        "New quote — " +
-        payload.name +
-        (payload.company ? " / " + payload.company : "") +
-        " · " +
-        payload.from +
-        " → " +
-        payload.to;
+      function onLeadOk(via) {
+        form.reset();
+        showStep(0);
+        showToast(
+          via === "whatsapp" ? "Opening WhatsApp" : "Request sent",
+          via === "whatsapp"
+            ? "Thanks " + payload.name.split(" ")[0] + " — finish sending in WhatsApp and we’ll reply with a fixed quote."
+            : "Thanks " + payload.name.split(" ")[0] + " — we’ll call or WhatsApp you with a fixed quote shortly."
+        );
+        trackEvent("generate_lead", {
+          event_category: "quote",
+          event_label: leadSource === "google-ads" ? "google-ads-quote" : payload.service || "website-quote",
+          currency: "GBP",
+        });
+        if (window.DROPSHIFT_GOOGLE_ADS_ID && window.DROPSHIFT_ADS_CONV && window.DROPSHIFT_ADS_CONV.form) {
+          gtag("event", "conversion", {
+            send_to: window.DROPSHIFT_GOOGLE_ADS_ID + "/" + window.DROPSHIFT_ADS_CONV.form,
+          });
+        }
+      }
 
-      fetch(BREVO_URL, {
-        method: "POST",
-        headers: {
-          accept: "application/json",
-          "content-type": "application/json",
-          "api-key": BREVO_API_KEY,
-        },
-        body: JSON.stringify({
-          sender: { name: "DropShift Transport", email: QUOTE_TO },
-          to: [{ email: QUOTE_TO }],
-          replyTo: { email: QUOTE_TO, name: "DropShift Transport" },
-          subject: subject,
-          htmlContent: mail.html,
-          textContent: mail.text,
-          tags: leadSource === "google-ads" ? ["website-quote", "google-ads"] : ["website-quote"],
-        }),
-      })
-        .then(function (r) {
-          if (!r.ok) throw new Error("brevo " + r.status);
-          form.reset();
-          showStep(0);
-          showToast(
-            "Request sent",
-            "Thanks " +
-              payload.name.split(" ")[0] +
-              " — we’ll call or WhatsApp you with a fixed quote shortly."
-          );
-          if (typeof gtag === "function") {
-            gtag("event", "generate_lead", {
-              event_category: "quote",
-              event_label: leadSource === "google-ads" ? "google-ads-quote" : payload.service || "website-quote",
-              currency: "GBP",
-            });
-          }
-        })
+      function waFallback() {
+        var lines = [
+          "Hi DropShift — new quote request",
+          "Name: " + payload.name,
+          "Phone: " + payload.phone,
+          "From: " + payload.from,
+          "To: " + payload.to,
+          payload.service ? "Service: " + payload.service : null,
+          payload.date ? "Date: " + payload.date : null,
+          payload.details ? "Details: " + payload.details : null,
+          payload.internalQuote ? payload.internalQuote : null,
+          "Source: " + leadSource,
+        ]
+          .filter(Boolean)
+          .join("\n");
+        window.open(
+          "https://wa.me/447353086191?text=" + encodeURIComponent(lines),
+          "_blank",
+          "noopener"
+        );
+        onLeadOk("whatsapp");
+      }
+
+      var sendPromise;
+      if (QUOTE_API) {
+        sendPromise = fetch(QUOTE_API, {
+          method: "POST",
+          headers: { accept: "application/json", "content-type": "application/json" },
+          body: JSON.stringify(payload),
+        }).then(function (r) {
+          if (!r.ok) throw new Error("api " + r.status);
+          onLeadOk("api");
+        });
+      } else {
+        /* No public Brevo key — WhatsApp keeps the lead until Worker is live */
+        sendPromise = Promise.resolve().then(waFallback);
+      }
+
+      sendPromise
         .catch(function () {
-          showToast(
-            "Couldn’t send just now",
-            "Please try again, or call / WhatsApp +44 7353 086191 and we’ll help straight away.",
-            "error"
-          );
+          waFallback();
         })
         .finally(function () {
           if (submitBtn) {
