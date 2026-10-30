@@ -536,9 +536,17 @@
   var pills = [].slice.call(document.querySelectorAll("[data-step-pill]"));
   var step = 0;
   var err = document.getElementById("formError");
-  /* Server endpoint (Cloudflare Worker). Set window.DROPSHIFT_QUOTE_API before site.js loads. */
-  var QUOTE_API = window.DROPSHIFT_QUOTE_API || "";
+  /* Prefer Cloudflare Worker (Brevo) when DROPSHIFT_QUOTE_API is a real URL.
+     Otherwise email via FormSubmit → contact@dropshift.co.uk (no public API key).
+     WhatsApp is only a last-resort fallback if email fails. */
+  var QUOTE_API_RAW = String(window.DROPSHIFT_QUOTE_API || "").trim();
+  var QUOTE_API =
+    QUOTE_API_RAW &&
+    !/your[-_]?worker|YOUR_|YOUR_SUBDOMAIN|example\.com/i.test(QUOTE_API_RAW)
+      ? QUOTE_API_RAW
+      : "";
   var QUOTE_TO = "contact@dropshift.co.uk";
+  var FORM_EMAIL_URL = "https://formsubmit.co/ajax/" + encodeURIComponent(QUOTE_TO);
 
   function escHtml(s) {
     return String(s || "")
@@ -836,6 +844,50 @@
         onWhatsAppHandoff(waUrl);
       }
 
+      function sendViaFormEmail() {
+        var mail = buildQuoteEmail(payload);
+        var subject =
+          (leadSource === "google-ads" ? "[ADS] " : "") +
+          "New quote — " +
+          payload.name +
+          " · " +
+          payload.from +
+          " → " +
+          payload.to;
+        return fetch(FORM_EMAIL_URL, {
+          method: "POST",
+          headers: { Accept: "application/json", "Content-Type": "application/json" },
+          body: JSON.stringify({
+            name: payload.name,
+            phone: payload.phone,
+            company: payload.company || "",
+            service: payload.service || "",
+            collection: payload.from,
+            delivery: payload.to,
+            date: payload.date || "",
+            frequency: payload.freq || "",
+            details: payload.details || "",
+            internal_estimate: payload.internalQuote || "",
+            lead_source: leadSource,
+            _subject: subject,
+            _template: "table",
+            _captcha: "false",
+            message: mail.text,
+          }),
+        }).then(function (r) {
+          if (!r.ok) throw new Error("email " + r.status);
+          return r.json().catch(function () {
+            return { success: "true" };
+          });
+        }).then(function (data) {
+          /* FormSubmit returns success:"true" | ok:true once the inbox is activated */
+          if (data && (data.success === "false" || data.error)) {
+            throw new Error(data.message || data.error || "email rejected");
+          }
+          onLeadOk();
+        });
+      }
+
       var sendPromise;
       if (QUOTE_API) {
         sendPromise = fetch(QUOTE_API, {
@@ -845,10 +897,12 @@
         }).then(function (r) {
           if (!r.ok) throw new Error("api " + r.status);
           onLeadOk();
+        }).catch(function () {
+          /* Worker down — still try email before WhatsApp */
+          return sendViaFormEmail();
         });
       } else {
-        /* No public Brevo key — WhatsApp keeps the lead until Worker is live */
-        sendPromise = Promise.resolve().then(waFallback);
+        sendPromise = sendViaFormEmail();
       }
 
       sendPromise

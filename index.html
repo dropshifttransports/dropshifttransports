@@ -272,10 +272,12 @@ gtag('config', 'G-29N0M3VMT6');
 setTimeout(function(){if(!window.__dropshiftMotion)document.documentElement.classList.add("motion-off");},2500);
 </script>
 <script>
-/* After Google Ads conversions exist, uncomment and fill:
+/* Quote emails go to contact@dropshift.co.uk via FormSubmit by default.
+   Optional: set a live Cloudflare Worker URL (Brevo) after workers/quote-email.js is deployed:
+window.DROPSHIFT_QUOTE_API = 'https://dropshift-quote.YOUR_SUBDOMAIN.workers.dev';
+   After Google Ads conversions exist:
 window.DROPSHIFT_GOOGLE_ADS_ID = 'AW-xxxxxxxxxx';
 window.DROPSHIFT_ADS_CONV = { phone: 'label', whatsapp: 'label', form: 'label' };
-window.DROPSHIFT_QUOTE_API = 'https://your-worker.workers.dev';
 */
 </script>
 </head>
@@ -1058,7 +1060,7 @@ window.DROPSHIFT_QUOTE_API = 'https://your-worker.workers.dev';
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js" defer></script>
 <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.18/dist/lenis.min.js" defer></script>
 <script src="assets/quote-calc.js?v=20261031c" defer></script>
-<script src="assets/site.js?v=20261031c" defer></script>
+<script src="assets/site.js?v=20261031d" defer></script>
 <style>
 @media (max-width:980px){
   .biz-inner{grid-template-columns:1fr!important}
