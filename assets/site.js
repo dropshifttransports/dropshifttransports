@@ -99,6 +99,29 @@
     if (e.key === "Escape") closeModal();
   });
 
+  /* ---------- Video posters: a poster always downloads, so fetch only near the viewport ---------- */
+  var lazyVideos = [].slice.call(document.querySelectorAll("video[data-poster]"));
+  function loadPoster(v) {
+    v.poster = v.getAttribute("data-poster");
+    v.preload = "metadata";
+  }
+  if ("IntersectionObserver" in window) {
+    var posterObserver = new IntersectionObserver(
+      function (es) {
+        es.forEach(function (e) {
+          if (e.isIntersecting) {
+            loadPoster(e.target);
+            posterObserver.unobserve(e.target);
+          }
+        });
+      },
+      { rootMargin: "400px" }
+    );
+    lazyVideos.forEach(function (v) { posterObserver.observe(v); });
+  } else {
+    lazyVideos.forEach(loadPoster);
+  }
+
   /* ---------- Hero service cycler ---------- */
   var services = [
     "Commercial & warehouse logistics",
@@ -232,7 +255,7 @@
       {
         id: "base",
         q: "Where are you based?",
-        keys: ["based", "base", "location", "where", "east london", "address", "office", "depot"],
+        keys: ["based", "base", "location", "where", "east london", "address", "depot"],
         a: "We're based in East London and work nationwide across the UK — Greater London plus England, Scotland and Wales.",
       },
       {
@@ -262,7 +285,7 @@
       {
         id: "it",
         q: "Can you move IT / office equipment?",
-        keys: ["it", "office", "computer", "monitor", "server", "desk", "relocation", "corporate", "printer"],
+        keys: ["it equipment", "it move", "it relocation", "office", "computer", "monitor", "server", "desk", "relocation", "corporate", "printer"],
         a: "Yes. We handle office and IT relocations — computers, monitors, printers, networking gear, desks, workstations and filing cabinets.",
       },
       {
@@ -298,7 +321,7 @@
       {
         id: "hours",
         q: "When can you collect?",
-        keys: ["hours", "when", "same day", "next day", "availability", "booking", "date"],
+        keys: ["hours", "when", "same day", "next day", "availability", "date"],
         a: "Collections are arranged around your preferred date and site access. Same/next-day options are available by arrangement — ask when you enquire.",
       },
     ];
@@ -330,15 +353,18 @@
     }
 
     function score(query, item) {
-      var q = query.toLowerCase();
+      var q = " " + query.toLowerCase().replace(/[^a-z0-9&-]+/g, " ") + " ";
       var s = 0;
+      /* Match from the start of a word, so "uk" can't match inside "truck" */
       item.keys.forEach(function (k) {
-        if (q.indexOf(k) !== -1) s += k.length > 4 ? 3 : 2;
+        if (q.indexOf(" " + k) !== -1) s += k.length > 4 ? 3 : 2;
       });
       var words = item.q.toLowerCase().split(/\W+/);
       words.forEach(function (w) {
-        if (w.length > 3 && q.indexOf(w) !== -1) s += 1;
+        if (w.length > 3 && q.indexOf(" " + w) !== -1) s += 1;
       });
+      /* A cost question wants the price answer, even when it names an item */
+      if (item.id === "price" && /\b(how much|cost|price)\b/.test(q)) s += 4;
       return s;
     }
 
@@ -440,9 +466,9 @@
       '<div class="toast-icon" aria-hidden="true">' +
       (type === "error" ? "!" : "✓") +
       "</div><div><div class=\"toast-title\">" +
-      title +
+      escHtml(title) +
       '</div><div class="toast-msg">' +
-      msg +
+      escHtml(msg) +
       '</div></div><button type="button" class="toast-close" aria-label="Dismiss">×</button>';
     toastHost.appendChild(el);
     requestAnimationFrame(function () {
@@ -614,6 +640,12 @@
     return { html: html, text: text };
   }
 
+  /* UK numbers are 10–11 digits; +44 / 0044 forms add up to 3 more */
+  function validPhone(s) {
+    var n = String(s).replace(/\D/g, "").length;
+    return /^[\d\s()+-]+$/.test(s) && n >= 10 && n <= 14;
+  }
+
   function showStep(i) {
     if (isFlatQuote || !steps.length) return;
     step = i;
@@ -641,6 +673,12 @@
           });
           if (bad) {
             err.textContent = "Add your name and phone number to continue.";
+            err.classList.add("show");
+            return;
+          }
+          if (!validPhone(phone.value.trim())) {
+            phone.setAttribute("aria-invalid", "true");
+            err.textContent = "Please check your phone number so we can call you back.";
             err.classList.add("show");
             return;
           }
@@ -709,6 +747,13 @@
         showToast("Missing details", "Please complete the required fields and try again.", "error");
         return;
       }
+      if (!validPhone(v("phone"))) {
+        document.getElementById("phone").setAttribute("aria-invalid", "true");
+        err.textContent = "Please check your phone number so we can call you back.";
+        err.classList.add("show");
+        showStep(0);
+        return;
+      }
       err.classList.remove("show");
       var leadSource = form.getAttribute("data-lead-source") || "website";
       var payload = {
@@ -731,14 +776,12 @@
         submitBtn.textContent = "Sending…";
       }
 
-      function onLeadOk(via) {
+      function onLeadOk() {
         form.reset();
         showStep(0);
         showToast(
-          via === "whatsapp" ? "Opening WhatsApp" : "Request sent",
-          via === "whatsapp"
-            ? "Thanks " + payload.name.split(" ")[0] + " — finish sending in WhatsApp and we’ll reply with a fixed quote."
-            : "Thanks " + payload.name.split(" ")[0] + " — we’ll call or WhatsApp you with a fixed quote shortly."
+          "Request sent",
+          "Thanks " + payload.name.split(" ")[0] + " — we’ll call or WhatsApp you with a fixed quote shortly."
         );
         trackEvent("generate_lead", {
           event_category: "quote",
@@ -752,6 +795,28 @@
         }
       }
 
+      /* Nothing has reached us yet: the customer still has to press Send in WhatsApp.
+         Keep their answers, say so plainly, and don't count it as a lead. */
+      function onWhatsAppHandoff(url) {
+        err.textContent = "";
+        err.appendChild(document.createTextNode("Not sent yet — press Send in WhatsApp to finish. WhatsApp didn’t open? "));
+        var waLink = document.createElement("a");
+        waLink.href = url;
+        waLink.target = "_blank";
+        waLink.rel = "noopener";
+        waLink.textContent = "Open WhatsApp";
+        err.appendChild(waLink);
+        err.appendChild(document.createTextNode(" or call "));
+        var telLink = document.createElement("a");
+        telLink.href = "tel:+447353086191";
+        telLink.textContent = "+44 7353 086191";
+        err.appendChild(telLink);
+        err.appendChild(document.createTextNode("."));
+        err.classList.add("show");
+        showToast("Opening WhatsApp", "Press Send in WhatsApp so your request reaches us.");
+        trackEvent("whatsapp_handoff", { event_category: "quote", event_label: leadSource });
+      }
+
       function waFallback() {
         var lines = [
           "Hi DropShift — new quote request",
@@ -762,17 +827,13 @@
           payload.service ? "Service: " + payload.service : null,
           payload.date ? "Date: " + payload.date : null,
           payload.details ? "Details: " + payload.details : null,
-          payload.internalQuote ? payload.internalQuote : null,
           "Source: " + leadSource,
         ]
           .filter(Boolean)
           .join("\n");
-        window.open(
-          "https://wa.me/447353086191?text=" + encodeURIComponent(lines),
-          "_blank",
-          "noopener"
-        );
-        onLeadOk("whatsapp");
+        var waUrl = "https://wa.me/447353086191?text=" + encodeURIComponent(lines);
+        window.open(waUrl, "_blank", "noopener");
+        onWhatsAppHandoff(waUrl);
       }
 
       var sendPromise;
@@ -783,7 +844,7 @@
           body: JSON.stringify(payload),
         }).then(function (r) {
           if (!r.ok) throw new Error("api " + r.status);
-          onLeadOk("api");
+          onLeadOk();
         });
       } else {
         /* No public Brevo key — WhatsApp keeps the lead until Worker is live */
@@ -982,7 +1043,12 @@
 
   /* ---------- GSAP / Lenis ---------- */
   function bootMotion() {
-    if (typeof gsap === "undefined") return;
+    if (typeof gsap === "undefined" || typeof ScrollTrigger === "undefined") {
+      /* Animation library missing: show the content that it would have revealed */
+      document.documentElement.classList.add("motion-off");
+      return;
+    }
+    window.__dropshiftMotion = true;
     gsap.registerPlugin(ScrollTrigger);
 
     var LenisCtor = window.Lenis || (window.lenis && window.lenis.default);
@@ -1012,7 +1078,7 @@
       }
       el.innerHTML = lines
         .map(function (l) {
-          return '<span class="split-line"><span>' + l + "</span></span>";
+          return '<span class="split-line"><span>' + escHtml(l) + "</span></span>";
         })
         .join("");
       if (!reduce) {

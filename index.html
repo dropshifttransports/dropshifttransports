@@ -265,7 +265,12 @@ gtag('config', 'G-29N0M3VMT6');
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,600;0,700;0,800;1,700;1,800&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/site.css?v=20261031b">
+<link rel="stylesheet" href="assets/site.css?v=20261031c">
+<noscript><style>.preloader{display:none}.reveal,.split-line > span{opacity:1!important;transform:none!important}</style></noscript>
+<script>
+/* If the animation scripts are slow or blocked, never leave visitors behind the loading screen */
+setTimeout(function(){if(!window.__dropshiftMotion)document.documentElement.classList.add("motion-off");},2500);
+</script>
 <script>
 /* After Google Ads conversions exist, uncomment and fill:
 window.DROPSHIFT_GOOGLE_ADS_ID = 'AW-xxxxxxxxxx';
@@ -597,25 +602,25 @@ window.DROPSHIFT_QUOTE_API = 'https://your-worker.workers.dev';
     </figure>
     <div class="video-reel reveal" aria-label="DropShift job videos">
       <figure class="video-card">
-        <video controls playsinline preload="metadata" poster="assets/hallway-move.jpg">
+        <video controls playsinline preload="none" data-poster="assets/hallway-move.jpg">
           <source src="assets/job-video-01.mp4" type="video/mp4">
         </video>
         <figcaption>On the job</figcaption>
       </figure>
       <figure class="video-card">
-        <video controls playsinline preload="metadata" poster="assets/carry-boxes.jpg">
+        <video controls playsinline preload="none" data-poster="assets/carry-boxes.jpg">
           <source src="assets/job-video-02.mp4" type="video/mp4">
         </video>
         <figcaption>Loading &amp; care</figcaption>
       </figure>
       <figure class="video-card">
-        <video controls playsinline preload="metadata" poster="assets/van-load.jpg">
+        <video controls playsinline preload="none" data-poster="assets/van-load.jpg">
           <source src="assets/job-video-03.mp4" type="video/mp4">
         </video>
         <figcaption>Luton van work</figcaption>
       </figure>
       <figure class="video-card">
-        <video controls playsinline preload="metadata" poster="assets/fleet-luton-lineup.jpg">
+        <video controls playsinline preload="none" data-poster="assets/fleet-luton-lineup.jpg">
           <source src="assets/job-video-04.mp4" type="video/mp4">
         </video>
         <figcaption>Delivery day</figcaption>
@@ -706,7 +711,6 @@ window.DROPSHIFT_QUOTE_API = 'https://your-worker.workers.dev';
       <div class="hero-actions reveal" style="margin-top:22px;display:flex;flex-wrap:wrap;gap:12px">
         <a class="btn btn-accent" href="https://maps.app.goo.gl/Linfy1WMstcky7GT8?utm_source=website&amp;utm_medium=referral&amp;utm_campaign=local_pack" target="_blank" rel="noopener">Open Google listing</a>
         <a class="btn btn-ghost" href="/near-me/">Near me page</a>
-        <a class="btn btn-ghost" href="/google-listing/">Listing checklist</a>
       </div>
     </div>
     <div class="local-pack-nap reveal">
@@ -919,7 +923,7 @@ window.DROPSHIFT_QUOTE_API = 'https://your-worker.workers.dev';
         <div class="form-nav">
           <button class="btn btn-ghost" type="button" data-prev>Back</button>
           <button class="btn btn-accent btn-magnetic quote-submit" type="submit" id="quoteSubmit">Send quote request</button>
-          <span class="form-note">Sends a branded email to our team.</span>
+          <span class="form-note">We call or WhatsApp you back with a fixed price.</span>
         </div>
       </div>
 
@@ -1053,8 +1057,8 @@ window.DROPSHIFT_QUOTE_API = 'https://your-worker.workers.dev';
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js" defer></script>
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js" defer></script>
 <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.18/dist/lenis.min.js" defer></script>
-<script src="assets/quote-calc.js?v=20261031b" defer></script>
-<script src="assets/site.js?v=20261031b" defer></script>
+<script src="assets/quote-calc.js?v=20261031c" defer></script>
+<script src="assets/site.js?v=20261031c" defer></script>
 <style>
 @media (max-width:980px){
   .biz-inner{grid-template-columns:1fr!important}

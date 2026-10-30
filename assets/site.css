@@ -36,6 +36,8 @@ h3{font-size:clamp(1.25rem,2vw,1.55rem)}
 .split-line > span{display:block;transform:translateY(110%);will-change:transform}
 .reveal{opacity:0;transform:translateY(36px)}
 .reveal.is-in{opacity:1;transform:none;transition:opacity .9s var(--ease),transform .9s var(--ease)}
+.motion-off .reveal,.motion-off .split-line > span{opacity:1!important;transform:none!important}
+.motion-off .preloader{display:none}
 
 /* Roll-up link */
 .roll{display:inline-flex;overflow:hidden;height:1.15em;line-height:1.15;vertical-align:bottom}
@@ -729,12 +731,16 @@ h3{font-size:clamp(1.25rem,2vw,1.55rem)}
   .svc-preview{display:none}
   .svc-panel-body{padding-left:8px}
   .svc-list{grid-template-columns:1fr}
-  .nav{display:none;position:fixed;inset:var(--header-h) 0 0;background:rgba(255,255,255,.98);backdrop-filter:blur(16px);flex-direction:column;align-items:flex-start;padding:32px 24px;gap:20px;border-top:1px solid var(--line)}
+  /* Explicit height: the header's backdrop-filter makes it the containing block, so bottom:0 would collapse the menu */
+  .nav{display:none;position:fixed;inset:var(--header-h) 0 auto;height:calc(100dvh - var(--header-h));overflow-y:auto;background:#fff;flex-direction:column;align-items:flex-start;padding:32px 24px;gap:20px;border-top:1px solid var(--line)}
   .nav.open{display:flex}
   .nav a{color:var(--navy);font-size:1.15rem;text-shadow:none}
-  .menu-btn{display:grid}
-  .header-phone{display:none}
-  .site-header.is-scrolled .menu-btn,.site-header .menu-btn{color:#fff}
+  .menu-btn{display:grid;flex:none}
+  .header-inner{gap:12px}
+  .header-phone{margin-left:auto;padding:12px 0;font-size:.95rem;white-space:nowrap}
+  .site-header .menu-btn{color:#fff}
+  .site-header.is-scrolled .menu-btn{color:var(--navy)}
+  .site-header.is-scrolled .header-phone{color:var(--blue);text-shadow:none}
   .site-header.is-scrolled .menu-btn{color:var(--navy)}
   .float-contact{display:none}
   .chat-launch{right:16px;bottom:72px;padding:12px 14px}
@@ -789,6 +795,7 @@ h3{font-size:clamp(1.25rem,2vw,1.55rem)}
 }
 .svc-page .site-header .nav a{color:var(--navy);text-shadow:none}
 .svc-page .site-header .nav a:hover{color:var(--blue);opacity:1}
+.site-header .nav a.btn,.svc-page .site-header .nav a.btn,.svc-page .site-header .nav a.btn:hover{color:#fff}
 .svc-page .site-header .header-phone{color:var(--blue);text-shadow:none}
 .svc-page .site-header .brand img{filter:none}
 .svc-page .site-header .menu-btn{color:var(--navy)}
@@ -840,13 +847,10 @@ h3{font-size:clamp(1.25rem,2vw,1.55rem)}
 @media (max-width:980px){
   .svc-grid{grid-template-columns:1fr}
   .svc-aside{position:static}
-  .svc-page .nav{
-    display:flex;position:static;inset:auto;flex-direction:row;flex-wrap:wrap;
-    padding:0;gap:10px 14px;border:0;background:transparent;backdrop-filter:none
-  }
-  .svc-page .nav a{font-size:.92rem;color:var(--navy)}
-  .svc-page .nav .btn{padding:10px 14px;font-size:.8rem}
-  .svc-page .header-phone{display:none}
+}
+@media (max-width:359px){
+  .header-phone{display:none}
+  .seo-links-grid{grid-template-columns:1fr}
 }
 
 /* Ads landing — short callback route */
