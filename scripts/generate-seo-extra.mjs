@@ -108,7 +108,7 @@ ${body}
     </div>
   </div>
 </footer>
-<script src="/assets/site.js?v=20261031d" defer></script>
+<script src="/assets/site.js?v=20261031e" defer></script>
 </body>
 </html>
 `;

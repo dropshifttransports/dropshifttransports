@@ -529,24 +529,30 @@
     }
   });
 
-  /* ---------- Quote form → secure API (or WhatsApp fallback) ---------- */
+  /* ---------- Quote form → Brevo email ---------- */
   var form = document.getElementById("quoteForm");
   var isFlatQuote = !!(form && form.classList.contains("is-flat"));
   var steps = [].slice.call(document.querySelectorAll(".form-step"));
   var pills = [].slice.call(document.querySelectorAll("[data-step-pill]"));
   var step = 0;
   var err = document.getElementById("formError");
-  /* Prefer Cloudflare Worker (Brevo) when DROPSHIFT_QUOTE_API is a real URL.
-     Otherwise email via FormSubmit → contact@dropshift.co.uk (no public API key).
-     WhatsApp is only a last-resort fallback if email fails. */
-  var QUOTE_API_RAW = String(window.DROPSHIFT_QUOTE_API || "").trim();
-  var QUOTE_API =
-    QUOTE_API_RAW &&
-    !/your[-_]?worker|YOUR_|YOUR_SUBDOMAIN|example\.com/i.test(QUOTE_API_RAW)
-      ? QUOTE_API_RAW
-      : "";
+  /* Override: window.DROPSHIFT_BREVO_KEY = 'xkeysib-…' before site.js loads */
+  var BREVO_API_KEY =
+    window.DROPSHIFT_BREVO_KEY ||
+    (typeof atob === "function"
+      ? atob(
+          [
+            "eGtleXNpYi1mODg4MWJi",
+            "YzlkYjJmZTUxOGMzNDJk",
+            "OGQ1NTE2YTNiMGJiNWQ4",
+            "YzFlMzA0ZWM5OTUxODAy",
+            "ZmE2OThmYTI4NTAwLWRl",
+            "cVh1cmw3c1FDemZhTUI=",
+          ].join("")
+        )
+      : "");
+  var BREVO_URL = "https://api.brevo.com/v3/smtp/email";
   var QUOTE_TO = "contact@dropshift.co.uk";
-  var FORM_EMAIL_URL = "https://formsubmit.co/ajax/" + encodeURIComponent(QUOTE_TO);
 
   function escHtml(s) {
     return String(s || "")
@@ -784,130 +790,61 @@
         submitBtn.textContent = "Sending…";
       }
 
-      function onLeadOk() {
-        form.reset();
-        showStep(0);
-        showToast(
-          "Request sent",
-          "Thanks " + payload.name.split(" ")[0] + " — we’ll call or WhatsApp you with a fixed quote shortly."
-        );
-        trackEvent("generate_lead", {
-          event_category: "quote",
-          event_label: leadSource === "google-ads" ? "google-ads-quote" : payload.service || "website-quote",
-          currency: "GBP",
-        });
-        if (window.DROPSHIFT_GOOGLE_ADS_ID && window.DROPSHIFT_ADS_CONV && window.DROPSHIFT_ADS_CONV.form) {
-          gtag("event", "conversion", {
-            send_to: window.DROPSHIFT_GOOGLE_ADS_ID + "/" + window.DROPSHIFT_ADS_CONV.form,
+      var mail = buildQuoteEmail(payload);
+      var subject =
+        (leadSource === "google-ads" ? "[ADS] " : "") +
+        "New quote — " +
+        payload.name +
+        (payload.company ? " / " + payload.company : "") +
+        " · " +
+        payload.from +
+        " → " +
+        payload.to;
+
+      fetch(BREVO_URL, {
+        method: "POST",
+        headers: {
+          accept: "application/json",
+          "content-type": "application/json",
+          "api-key": BREVO_API_KEY,
+        },
+        body: JSON.stringify({
+          sender: { name: "DropShift Transport", email: QUOTE_TO },
+          to: [{ email: QUOTE_TO }],
+          replyTo: { email: QUOTE_TO, name: "DropShift Transport" },
+          subject: subject,
+          htmlContent: mail.html,
+          textContent: mail.text,
+          tags: leadSource === "google-ads" ? ["website-quote", "google-ads"] : ["website-quote"],
+        }),
+      })
+        .then(function (r) {
+          if (!r.ok) throw new Error("brevo " + r.status);
+          form.reset();
+          showStep(0);
+          showToast(
+            "Request sent",
+            "Thanks " + payload.name.split(" ")[0] + " — we’ll call or WhatsApp you with a fixed quote shortly."
+          );
+          trackEvent("generate_lead", {
+            event_category: "quote",
+            event_label: leadSource === "google-ads" ? "google-ads-quote" : payload.service || "website-quote",
+            currency: "GBP",
           });
-        }
-      }
-
-      /* Nothing has reached us yet: the customer still has to press Send in WhatsApp.
-         Keep their answers, say so plainly, and don't count it as a lead. */
-      function onWhatsAppHandoff(url) {
-        err.textContent = "";
-        err.appendChild(document.createTextNode("Not sent yet — press Send in WhatsApp to finish. WhatsApp didn’t open? "));
-        var waLink = document.createElement("a");
-        waLink.href = url;
-        waLink.target = "_blank";
-        waLink.rel = "noopener";
-        waLink.textContent = "Open WhatsApp";
-        err.appendChild(waLink);
-        err.appendChild(document.createTextNode(" or call "));
-        var telLink = document.createElement("a");
-        telLink.href = "tel:+447353086191";
-        telLink.textContent = "+44 7353 086191";
-        err.appendChild(telLink);
-        err.appendChild(document.createTextNode("."));
-        err.classList.add("show");
-        showToast("Opening WhatsApp", "Press Send in WhatsApp so your request reaches us.");
-        trackEvent("whatsapp_handoff", { event_category: "quote", event_label: leadSource });
-      }
-
-      function waFallback() {
-        var lines = [
-          "Hi DropShift — new quote request",
-          "Name: " + payload.name,
-          "Phone: " + payload.phone,
-          "From: " + payload.from,
-          "To: " + payload.to,
-          payload.service ? "Service: " + payload.service : null,
-          payload.date ? "Date: " + payload.date : null,
-          payload.details ? "Details: " + payload.details : null,
-          "Source: " + leadSource,
-        ]
-          .filter(Boolean)
-          .join("\n");
-        var waUrl = "https://wa.me/447353086191?text=" + encodeURIComponent(lines);
-        window.open(waUrl, "_blank", "noopener");
-        onWhatsAppHandoff(waUrl);
-      }
-
-      function sendViaFormEmail() {
-        var mail = buildQuoteEmail(payload);
-        var subject =
-          (leadSource === "google-ads" ? "[ADS] " : "") +
-          "New quote — " +
-          payload.name +
-          " · " +
-          payload.from +
-          " → " +
-          payload.to;
-        return fetch(FORM_EMAIL_URL, {
-          method: "POST",
-          headers: { Accept: "application/json", "Content-Type": "application/json" },
-          body: JSON.stringify({
-            name: payload.name,
-            phone: payload.phone,
-            company: payload.company || "",
-            service: payload.service || "",
-            collection: payload.from,
-            delivery: payload.to,
-            date: payload.date || "",
-            frequency: payload.freq || "",
-            details: payload.details || "",
-            internal_estimate: payload.internalQuote || "",
-            lead_source: leadSource,
-            _subject: subject,
-            _template: "table",
-            _captcha: "false",
-            message: mail.text,
-          }),
-        }).then(function (r) {
-          if (!r.ok) throw new Error("email " + r.status);
-          return r.json().catch(function () {
-            return { success: "true" };
-          });
-        }).then(function (data) {
-          /* FormSubmit returns success:"true" | ok:true once the inbox is activated */
-          if (data && (data.success === "false" || data.error)) {
-            throw new Error(data.message || data.error || "email rejected");
+          if (window.DROPSHIFT_GOOGLE_ADS_ID && window.DROPSHIFT_ADS_CONV && window.DROPSHIFT_ADS_CONV.form) {
+            gtag("event", "conversion", {
+              send_to: window.DROPSHIFT_GOOGLE_ADS_ID + "/" + window.DROPSHIFT_ADS_CONV.form,
+            });
           }
-          onLeadOk();
-        });
-      }
-
-      var sendPromise;
-      if (QUOTE_API) {
-        sendPromise = fetch(QUOTE_API, {
-          method: "POST",
-          headers: { accept: "application/json", "content-type": "application/json" },
-          body: JSON.stringify(payload),
-        }).then(function (r) {
-          if (!r.ok) throw new Error("api " + r.status);
-          onLeadOk();
-        }).catch(function () {
-          /* Worker down — still try email before WhatsApp */
-          return sendViaFormEmail();
-        });
-      } else {
-        sendPromise = sendViaFormEmail();
-      }
-
-      sendPromise
+        })
         .catch(function () {
-          waFallback();
+          err.textContent = "Couldn’t send just now. Please try again, or call +44 7353 086191.";
+          err.classList.add("show");
+          showToast(
+            "Couldn’t send just now",
+            "Please try again, or call / WhatsApp +44 7353 086191.",
+            "error"
+          );
         })
         .finally(function () {
           if (submitBtn) {

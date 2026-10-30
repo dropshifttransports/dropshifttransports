@@ -1,13 +1,10 @@
 /**
- * Copy to ads-config.js on the server (or paste into index.html / get-a-quote)
- * AFTER you create Google Ads conversions and deploy the Cloudflare Worker.
+ * Copy into index.html / get-a-quote AFTER Google Ads conversions exist.
  *
- * 1. Google Ads → Goals → Conversions → create:
- *    - Phone click (website)
- *    - WhatsApp click
- *    - Form submit / generate_lead
- * 2. Copy AW- ID and conversion labels below
- * 3. Deploy workers/quote-email.js, set BREVO_API_KEY secret, revoke old public key
+ * 1. Google Ads → Goals → Conversions → create phone / WhatsApp / form labels
+ * 2. Paste AW- ID and labels below
+ * 3. Quotes already send via Brevo (site.js). If the key was rotated, set:
+ *    window.DROPSHIFT_BREVO_KEY = "xkeysib-…";
  */
 window.DROPSHIFT_GOOGLE_ADS_ID = "AW-XXXXXXXXX";
 window.DROPSHIFT_ADS_CONV = {
@@ -15,4 +12,3 @@ window.DROPSHIFT_ADS_CONV = {
   whatsapp: "XXXXXXXXXXXXXXXXXX",
   form: "XXXXXXXXXXXXXXXXXX",
 };
-window.DROPSHIFT_QUOTE_API = "https://dropshift-quote.YOUR_SUBDOMAIN.workers.dev";
