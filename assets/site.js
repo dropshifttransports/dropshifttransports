@@ -615,7 +615,7 @@
       '<table width="100%" cellpadding="0" cellspacing="0" style="padding:28px 12px"><tr><td align="center">' +
       '<table width="100%" style="max-width:600px;background:#fff;border:1px solid #CFDDF4">' +
       '<tr><td style="background:#0A2463;padding:22px 28px;border-bottom:4px solid #1659D6">' +
-      '<div style="font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:#7FA8FF;font-weight:700">DropShift Transport</div>' +
+      '<div style="font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:#7FA8FF;font-weight:700">Drop Shift Transports</div>' +
       '<div style="font-size:24px;font-weight:700;color:#fff;margin-top:8px">New quote request</div></td></tr>' +
       '<tr><td style="padding:20px 28px 8px;color:#4D5B78;font-size:14px">Submitted ' +
       escHtml(when) +
@@ -647,7 +647,7 @@
       escHtml(wa) +
       '" style="display:inline-block;background:#25D366;color:#fff;text-decoration:none;font-weight:700;padding:14px 22px;margin:4px">WhatsApp</a></td></tr>' +
       '<tr><td style="background:#0A2463;padding:18px 28px;border-top:4px solid #1659D6;color:#B3C4E6;font-size:12px">' +
-      '<div style="color:#fff;font-weight:700">DropShift Transport</div>East London · Nationwide UK · contact@dropshift.co.uk · +44 7353 086191</td></tr>' +
+      '<div style="color:#fff;font-weight:700">Drop Shift Transports</div>East London · Nationwide UK · contact@dropshift.co.uk · +44 7353 086191</td></tr>' +
       "</table></td></tr></table></body></html>";
     var text = [
       "DROPSHIFT TRANSPORT — New quote",
@@ -824,9 +824,9 @@
           "api-key": BREVO_API_KEY,
         },
         body: JSON.stringify({
-          sender: { name: "DropShift Transport", email: QUOTE_TO },
+          sender: { name: "Drop Shift Transports", email: QUOTE_TO },
           to: [{ email: QUOTE_TO }],
-          replyTo: { email: QUOTE_TO, name: "DropShift Transport" },
+          replyTo: { email: QUOTE_TO, name: "Drop Shift Transports" },
           subject: subject,
           htmlContent: mail.html,
           textContent: mail.text,

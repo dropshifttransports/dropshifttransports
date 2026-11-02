@@ -382,7 +382,7 @@ function pageHtml(p) {
 <link rel="apple-touch-icon" href="/apple-touch-icon.png" sizes="180x180">
 <meta property="og:type" content="website">
 <meta property="og:locale" content="en_GB">
-<meta property="og:site_name" content="DropShift Transport">
+<meta property="og:site_name" content="Drop Shift Transports">
 <meta property="og:url" content="${url}">
 <meta property="og:title" content="${esc(p.title)}">
 <meta property="og:description" content="${esc(p.desc)}">
@@ -403,7 +403,7 @@ ${JSON.stringify(schema, null, 2)}
 <body class="svc-page">
 <header class="site-header is-solid">
   <div class="header-inner">
-    <a class="brand" href="/" aria-label="DropShift Transport home"><img src="/assets/logo.webp" alt="DropShift Transport" width="183" height="44"></a>
+    <a class="brand" href="/" aria-label="Drop Shift Transports home"><img src="/assets/logo.webp" alt="Drop Shift Transports" width="183" height="44"></a>
     <nav class="nav" id="nav" aria-label="Main">
       <a href="/#services"><span class="roll"><span><i>Services</i><i>Services</i></span></span></a>
       <a href="/man-and-van/"><span class="roll"><span><i>Man &amp; van</i><i>Man &amp; van</i></span></span></a>
@@ -424,7 +424,7 @@ ${JSON.stringify(schema, null, 2)}
     </div>
     <div class="wrap svc-hero-copy">
       <p class="eyebrow">${esc(p.eyebrow)}</p>
-      <p class="svc-brand">DropShift Transport</p>
+      <p class="svc-brand">Drop Shift Transports</p>
       <h1>${esc(p.h1)}</h1>
       <p class="lede">${esc(p.lede)}</p>
       <div class="hero-actions">
@@ -481,7 +481,7 @@ ${JSON.stringify(schema, null, 2)}
   <div class="wrap footer-inner">
     <div class="foot-grid">
       <div>
-        <a class="brand" href="/"><img src="/assets/logo.webp" alt="DropShift Transport" width="183" height="44"></a>
+        <a class="brand" href="/"><img src="/assets/logo.webp" alt="Drop Shift Transports" width="183" height="44"></a>
         <p class="foot-brand-blurb">Man and van London, house removals, furniture delivery and pallet logistics.</p>
       </div>
       <div>
@@ -503,7 +503,7 @@ ${JSON.stringify(schema, null, 2)}
       </div>
     </div>
     <div class="foot-bottom">
-      <span>© 2026 DropShift Transport</span>
+      <span>© 2026 Drop Shift Transports</span>
       <a href="/">Home</a>
       <a href="/privacy.html">Privacy</a>
     </div>

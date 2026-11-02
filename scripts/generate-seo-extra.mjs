@@ -28,7 +28,7 @@ function shell({ title, desc, url, img, schema, body, brandLine }) {
 <link rel="apple-touch-icon" href="/apple-touch-icon.png" sizes="180x180">
 <meta property="og:type" content="website">
 <meta property="og:locale" content="en_GB">
-<meta property="og:site_name" content="DropShift Transport">
+<meta property="og:site_name" content="Drop Shift Transports">
 <meta property="og:url" content="${url}">
 <meta property="og:title" content="${esc(title)}">
 <meta property="og:description" content="${esc(desc)}">
@@ -49,7 +49,7 @@ ${JSON.stringify(schema, null, 2)}
 <body class="svc-page">
 <header class="site-header is-solid">
   <div class="header-inner">
-    <a class="brand" href="/" aria-label="DropShift Transport home"><img src="/assets/logo.webp" alt="DropShift Transport" width="183" height="44"></a>
+    <a class="brand" href="/" aria-label="Drop Shift Transports home"><img src="/assets/logo.webp" alt="Drop Shift Transports" width="183" height="44"></a>
     <nav class="nav" id="nav" aria-label="Main">
       <a href="/man-and-van/"><span class="roll"><span><i>Man &amp; van</i><i>Man &amp; van</i></span></span></a>
       <a href="/pricing/"><span class="roll"><span><i>Pricing</i><i>Pricing</i></span></span></a>
@@ -69,7 +69,7 @@ ${body}
   <div class="wrap footer-inner">
     <div class="foot-grid">
       <div>
-        <a class="brand" href="/"><img src="/assets/logo.webp" alt="DropShift Transport" width="183" height="44"></a>
+        <a class="brand" href="/"><img src="/assets/logo.webp" alt="Drop Shift Transports" width="183" height="44"></a>
         <p class="foot-brand-blurb">${esc(brandLine || "Man and van London, house removals and furniture delivery from East London.")}</p>
       </div>
       <div>
@@ -101,7 +101,7 @@ ${body}
       </div>
     </div>
     <div class="foot-bottom">
-      <span>© 2026 DropShift Transport</span>
+      <span>© 2026 Drop Shift Transports</span>
       <a href="/">Home</a>
       <a href="/guides/">Guides</a>
       <a href="/privacy.html">Privacy</a>
@@ -121,7 +121,7 @@ function hero({ eyebrow, h1, lede, img }) {
     </div>
     <div class="wrap svc-hero-copy">
       <p class="eyebrow">${esc(eyebrow)}</p>
-      <p class="svc-brand">DropShift Transport</p>
+      <p class="svc-brand">Drop Shift Transports</p>
       <h1>${esc(h1)}</h1>
       <p class="lede">${esc(lede)}</p>
       <div class="hero-actions">
@@ -459,7 +459,7 @@ for (const a of areas) {
     },
     {
       slug: "house-removal-checklist",
-      title: "House Removal Checklist UK | DropShift Transport",
+      title: "House Removal Checklist UK | Drop Shift Transports",
       h1: "House removal checklist",
       desc: "House removal checklist for London moves — packing, parking, utilities and booking your removal company.",
       eyebrow: "Guide",
@@ -557,7 +557,7 @@ for (const a of areas) {
           "@type": "Article",
           headline: g.h1,
           description: g.desc,
-          author: { "@type": "Organization", name: "DropShift Transport" },
+          author: { "@type": "Organization", name: "Drop Shift Transports" },
           publisher: { "@id": "https://dropshift.co.uk/#business" },
           mainEntityOfPage: gUrl,
         },
@@ -576,7 +576,7 @@ fs.writeFileSync(
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Page not found | DropShift Transport</title>
+<title>Page not found | Drop Shift Transports</title>
 <meta name="robots" content="noindex">
 <meta name="theme-color" content="#0A2463">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
@@ -586,7 +586,7 @@ fs.writeFileSync(
 <body class="svc-page">
 <header class="site-header is-solid">
   <div class="header-inner">
-    <a class="brand" href="/"><img src="/assets/logo.webp" alt="DropShift Transport" width="183" height="44"></a>
+    <a class="brand" href="/"><img src="/assets/logo.webp" alt="Drop Shift Transports" width="183" height="44"></a>
     <a class="btn btn-accent" href="/#quote">Get a free quote</a>
   </div>
 </header>

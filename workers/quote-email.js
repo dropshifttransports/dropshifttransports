@@ -94,9 +94,9 @@ export default {
         "api-key": env.BREVO_API_KEY,
       },
       body: JSON.stringify({
-        sender: { name: "DropShift Transport", email: toEmail },
+        sender: { name: "Drop Shift Transports", email: toEmail },
         to: [{ email: toEmail }],
-        replyTo: { email: toEmail, name: "DropShift Transport" },
+        replyTo: { email: toEmail, name: "Drop Shift Transports" },
         subject: subject,
         htmlContent: html,
         textContent: text,
