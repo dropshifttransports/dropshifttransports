@@ -21,3 +21,8 @@ User-agent: anthropic-ai
 Allow: /
 
 Sitemap: https://dropshift.co.uk/sitemap.xml
+
+# AI-readable summary
+# https://dropshift.co.uk/llms.txt
+# HTML sitemap for crawlers & visitors
+# https://dropshift.co.uk/site-map/
