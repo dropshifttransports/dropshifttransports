@@ -509,7 +509,7 @@ ${JSON.stringify(schema, null, 2)}
     </div>
   </div>
 </footer>
-<script src="/assets/site.js?v=20261031f" defer></script>
+<script src="/assets/site.js?v=20261102a" defer></script>
 </body>
 </html>
 `;

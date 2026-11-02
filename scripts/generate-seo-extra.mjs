@@ -108,7 +108,7 @@ ${body}
     </div>
   </div>
 </footer>
-<script src="/assets/site.js?v=20261031f" defer></script>
+<script src="/assets/site.js?v=20261102a" defer></script>
 </body>
 </html>
 `;
@@ -168,6 +168,12 @@ const areas = [
     name: "Romford",
     nearby: "Hornchurch, Upminster, Dagenham and Havering",
     notes: "Luton van capacity for larger house moves and palletised commercial loads out toward Essex.",
+  },
+  {
+    slug: "bow",
+    name: "Bow",
+    nearby: "Mile End, Bromley-by-Bow, Bow Common and Tower Hamlets E3",
+    notes: "Ideal for flat moves, furniture deliveries and same-day courier runs around Bow E3 and Mile End.",
   },
 ];
 

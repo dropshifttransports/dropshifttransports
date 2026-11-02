@@ -222,8 +222,8 @@
     gallery.addEventListener("pointerleave", function () { gDown = false; });
   }
 
-  /* ---------- FAQ chatbot ---------- */
-  (function initFaqChat() {
+  /* ---------- FAQ chatbot (deferred for mobile speed) ---------- */
+  function initFaqChat() {
     var launch = document.getElementById("chatLaunch");
     var panel = document.getElementById("chatPanel");
     var closeBtn = document.getElementById("chatClose");
@@ -232,6 +232,7 @@
     var form = document.getElementById("chatForm");
     var input = document.getElementById("chatInput");
     if (!launch || !panel || !log || !form || !input) return;
+    launch.hidden = false;
 
     var knowledge = [
       {
@@ -304,7 +305,13 @@
         id: "insured",
         q: "Are you insured?",
         keys: ["insur", "liability", "goods in transit", "goods-in-transit", "public liability"],
-        a: "Yes. We carry goods-in-transit and public liability cover. Cover amounts are available on request.",
+        a: "Yes. Goods in Transit cover from £10,000 to £50,000 and Public Liability from £1 million to £5 million, confirmed on your quote.",
+      },
+      {
+        id: "van",
+        q: "What size is the Luton van?",
+        keys: ["dimension", "size", "capacity", "cubic", "length", "width", "height", "luton van", "how big"],
+        a: "Our Luton vans are approx 4.0 m load length × 2.0 m width × 2.2 m height (about 14–18 m³), with tail lift and pallet truck. Exact fit depends on the load — send photos for confirmation.",
       },
       {
         id: "services",
@@ -453,7 +460,15 @@
     document.addEventListener("keydown", function (e) {
       if (e.key === "Escape" && panel.classList.contains("is-open")) closeChat();
     });
-  })();
+  }
+  /* Defer chat widget so first paint / LCP stay fast on mobile */
+  if ("requestIdleCallback" in window) {
+    requestIdleCallback(function () {
+      initFaqChat();
+    }, { timeout: 4500 });
+  } else {
+    setTimeout(initFaqChat, 2800);
+  }
 
   /* ---------- Toast ---------- */
   var toastHost = document.getElementById("toastHost");
@@ -1067,11 +1082,14 @@
         var mid = Math.ceil(words.length / 2);
         lines = [words.slice(0, mid).join(" "), words.slice(mid).join(" ")].filter(Boolean);
       }
+      /* Join with a real space so crawlers don't merge words across display:block lines
+         (e.g. "Why people" + "book DropShift" → "Why peoplebook"). */
+      el.setAttribute("aria-label", text);
       el.innerHTML = lines
         .map(function (l) {
           return '<span class="split-line"><span>' + escHtml(l) + "</span></span>";
         })
-        .join("");
+        .join(" ");
       if (!reduce) {
         gsap.to(el.querySelectorAll(".split-line > span"), {
           y: 0,

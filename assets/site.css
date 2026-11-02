@@ -623,6 +623,7 @@ h3{font-size:clamp(1.25rem,2vw,1.55rem)}
 .visually-hidden{
   position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);border:0;
 }
+.chat-launch[hidden]{display:none!important}
 .chat-launch{
   position:fixed;right:24px;bottom:24px;z-index:95;
   display:inline-flex;align-items:center;gap:10px;
